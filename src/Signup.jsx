@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import YabvilPrepLogo from './Yabvilprep-logo.png'
 
 export default function Signup({setUser}) {
 
@@ -116,10 +117,10 @@ export default function Signup({setUser}) {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4">🎓</div>
+        <div className="text-center mb-8 grid place-items-center">
+          <img src={YabvilPrepLogo}  alt="Logo" className="w-15 h-15"/>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            EduBridge CBT
+            YabvilPrep CBT
           </h1>
           <p className="text-gray-600 mt-2">Nigerian Educational Testing Platform</p>
         </div>

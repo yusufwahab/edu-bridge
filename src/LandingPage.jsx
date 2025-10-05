@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, Users, Globe, Smartphone, CheckCircle, Star, ArrowRight, Menu, X, Play, Download, Target, TrendingUp, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Login from './Login';
+import YabvilPrepLogo from './Yabvilprep-logo.png'
 
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,7 +14,7 @@ const LandingPage = () => {
     {
       name: "Fatima A.",
       role: "UTME Candidate",
-      text: "EduBridge helped me pass UTME on my first try! The offline feature was a game-changer since I don't have constant internet access.",
+      text: "YabvilPrep helped me pass UTME on my first try! The offline feature was a game-changer since I don't have constant internet access.",
       rating: 5
     },
     {
@@ -25,7 +26,7 @@ const LandingPage = () => {
     {
       name: "Mrs. Sarah M.",
       role: "Parent",
-      text: "Finally, an affordable solution for quality exam prep. My son's confidence has grown tremendously since using EduBridge.",
+      text: "Finally, an affordable solution for quality exam prep. My son's confidence has grown tremendously since using YabvilPrep.",
       rating: 5
     }
   ];
@@ -83,9 +84,9 @@ const LandingPage = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+                <img src={YabvilPrepLogo} alt='Logo' />
               </div>
-              <span className="text-2xl font-bold text-gray-900">EduBridge</span>
+              <span className="text-2xl font-bold text-gray-900">YabvilPrep</span>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
@@ -271,7 +272,7 @@ const LandingPage = () => {
       <section id="solution" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Solution: EduBridge</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Solution: YabvilPrep</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               A comprehensive mobile and web platform that makes quality education accessible to every student, 
               regardless of their location or economic background.
@@ -388,7 +389,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">What Students Are Saying</h2>
-            <p className="text-xl text-gray-600">Join thousands of students who have improved their results with EduBridge</p>
+            <p className="text-xl text-gray-600">Join thousands of students who have improved their results with YabvilPrep</p>
           </div>
 
           <div className="relative">
@@ -429,7 +430,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
           <p className="text-xl opacity-90 max-w-4xl mx-auto leading-relaxed mb-8">
-            EduBridge isn't just an app, it's a bridge to brighter futures. We believe every student deserves access to quality education, 
+            YabvilPrep isn't just an app, it's a bridge to brighter futures. We believe every student deserves access to quality education, 
             regardless of their background or location. Our mission is to democratize learning and help millions of African students 
             achieve their academic dreams.
           </p>
@@ -455,7 +456,7 @@ const LandingPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-gray-900 mb-6">Ready to Bridge Your Learning Gap?</h2>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Join thousands of students who are already improving their exam results with EduBridge. 
+            Join thousands of students who are already improving their exam results with YabvilPrep. 
             Start your journey to academic success today.
           </p>
           
@@ -485,7 +486,7 @@ const LandingPage = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-2xl font-bold">EduBridge</span>
+                <span className="text-2xl font-bold">YabvilPrep</span>
               </div>
               <p className="text-gray-400 leading-relaxed">
                 Bridging the gap in student learning and exam preparation across Africa.
@@ -525,7 +526,7 @@ const LandingPage = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 EduBridge. All rights reserved. Abdulwahab Boluwatife Yusuf.</p>
+            <p>&copy; 2025 YabvilPrep. All rights reserved. Abdulwahab Boluwatife Yusuf.</p>
           </div>
         </div>s
       </footer>
