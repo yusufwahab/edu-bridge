@@ -440,8 +440,8 @@ Return only a JSON array of questions. Ensure questions are varied across the se
               <span>🔑</span> Setup Your API Key
             </h2>
             <ol className="text-sm text-blue-800 space-y-2 list-decimal list-inside">
-              <li>Visit <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-blue-600">console.groq.com</a></li>
-              <li>Create a free account and get your API key</li>
+              <li>Visit <a href="https://prepify.wahab.com" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-blue-600">prepify.wahab.com</a></li>
+              <li>Create a free account and get your token</li>
               <li>Paste it below to start creating tests</li>
             </ol>
           </div> */}
