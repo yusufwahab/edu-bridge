@@ -4,6 +4,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 export default function App() {
@@ -14,7 +15,7 @@ export default function App() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
-      if (!token) {
+      if (token) {
         try {
           const response = await axios.get(`${BASE_URL}/api/user/me`, {
             headers: {
