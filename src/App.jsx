@@ -19,6 +19,8 @@ import OnboardingLearningStyle from "./components/OnboardingLearningStyle";
 import OnboardingCareerAssessment from "./components/OnboardingCareerAssessment";
 import OnboardingFirstPact from "./components/OnboardingFirstPact";
 import LearningPage from "./components/LearningPage";
+import SettingsPage from "./components/SettingsPage";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -52,8 +54,9 @@ export default function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/signup" element={<Signup setUser={setUser} />} />
@@ -78,8 +81,9 @@ export default function App() {
         <Route path="/study-recipes" element={<Layout><StudyRecipePage /></Layout>} />
         <Route path="/peer-teach" element={<Layout><PeerTeachPage /></Layout>} />
         <Route path="/activity-feed" element={<Layout><ActivityFeedPage /></Layout>} />
-        <Route path="/settings" element={<Layout><div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p>Settings page coming soon...</p></div></Layout>} />
-      </Routes>
-    </BrowserRouter>
+        <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }

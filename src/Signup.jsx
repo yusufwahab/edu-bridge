@@ -102,6 +102,7 @@ export default function Signup({setUser}) {
     try {
       const res = await axios.post(`${BASE_URL}/api/user/register`, formData);
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('darkMode', 'true');
       console.log('Registration successful:', res.data);
       setUser(res.data.user);
       

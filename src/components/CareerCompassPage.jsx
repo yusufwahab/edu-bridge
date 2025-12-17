@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import CareerAssessment from './CareerAssessment';
 import CareerMatchingEngine from './CareerMatchingEngine';
 import CareerRoadmapGenerator from './CareerRoadmapGenerator';
 import { MapPin, User, Briefcase, ArrowRight } from 'lucide-react';
 
 const CareerCompassPage = () => {
+  const { isDarkMode } = useTheme();
   const [currentView, setCurrentView] = useState('overview');
   const [assessmentResults, setAssessmentResults] = useState(null);
   const [selectedCareer, setSelectedCareer] = useState(null);
@@ -32,7 +34,11 @@ const CareerCompassPage = () => {
       <div className="p-6">
         <button
           onClick={() => setCurrentView('overview')}
-          className="mb-4 text-indigo-600 hover:text-indigo-700 font-semibold"
+          className={`mb-4 font-semibold ${
+            isDarkMode 
+              ? 'text-blue-400 hover:text-blue-300' 
+              : 'text-indigo-600 hover:text-indigo-700'
+          }`}
         >
           ← Back to Career Compass
         </button>
@@ -49,7 +55,11 @@ const CareerCompassPage = () => {
       <div className="p-6">
         <button
           onClick={() => setCurrentView('overview')}
-          className="mb-4 text-indigo-600 hover:text-indigo-700 font-semibold"
+          className={`mb-4 font-semibold ${
+            isDarkMode 
+              ? 'text-blue-400 hover:text-blue-300' 
+              : 'text-indigo-600 hover:text-indigo-700'
+          }`}
         >
           ← Back to Career Compass
         </button>
@@ -69,37 +79,63 @@ const CareerCompassPage = () => {
             <MapPin className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Career Compass</h1>
-            <p className="text-gray-600">AI-powered career guidance for Nigerian students</p>
+            <h1 className={`text-3xl font-bold ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Career Compass</h1>
+            <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>AI-powered career guidance for Nigerian students</p>
           </div>
         </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className={`rounded-xl shadow-sm border p-6 ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-100'
+        }`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <User className="w-5 h-5 text-blue-600" />
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              isDarkMode 
+                ? 'bg-blue-600/20' 
+                : 'bg-blue-100'
+            }`}>
+              <User className={`w-5 h-5 ${
+                isDarkMode ? 'text-blue-400' : 'text-blue-600'
+              }`} />
             </div>
-            <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Career Assessment</h3>
+            <h3 className={`text-lg font-bold ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Career Assessment</h3>
           </div>
           
           {assessmentResults ? (
             <div>
               <p className="text-green-600 font-medium mb-2">✓ Assessment completed</p>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className={`text-sm mb-4 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
                 Dominant type: {assessmentResults.dominant}
               </p>
               <button
                 onClick={() => setCurrentView('assessment')}
-                className="text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                className={`text-sm font-medium ${
+                  isDarkMode 
+                    ? 'text-blue-400 hover:text-blue-300' 
+                    : 'text-indigo-600 hover:text-indigo-700'
+                }`}
               >
                 Retake Assessment
               </button>
             </div>
           ) : (
             <div>
-              <p className="text-gray-600 text-sm mb-4">
+              <p className={`text-sm mb-4 ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>
                 Take a comprehensive assessment to discover your ideal career path.
               </p>
               <button
@@ -112,15 +148,31 @@ const CareerCompassPage = () => {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className={`rounded-xl shadow-sm border p-6 ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-100'
+        }`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-green-600" />
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              isDarkMode 
+                ? 'bg-green-600/20' 
+                : 'bg-green-100'
+            }`}>
+              <Briefcase className={`w-5 h-5 ${
+                isDarkMode ? 'text-green-400' : 'text-green-600'
+              }`} />
             </div>
-            <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Career Matching</h3>
+            <h3 className={`text-lg font-bold ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Career Matching</h3>
           </div>
           
-          <p className="text-gray-600 text-sm mb-4">
+          <p className={`text-sm mb-4 ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
             Get AI-powered career recommendations based on your assessment.
           </p>
           <button
@@ -132,15 +184,31 @@ const CareerCompassPage = () => {
           </button>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className={`rounded-xl shadow-sm border p-6 ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-100'
+        }`}>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-indigo-600" />
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              isDarkMode 
+                ? 'bg-indigo-600/20' 
+                : 'bg-indigo-100'
+            }`}>
+              <MapPin className={`w-5 h-5 ${
+                isDarkMode ? 'text-indigo-400' : 'text-indigo-600'
+              }`} />
             </div>
-            <h3 className="text-lg font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Career Roadmap</h3>
+            <h3 className={`text-lg font-bold ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Career Roadmap</h3>
           </div>
           
-          <p className="text-gray-600 text-sm mb-4">
+          <p className={`text-sm mb-4 ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
             Get a personalized roadmap from where you are to your dream career.
           </p>
           <button
@@ -153,19 +221,39 @@ const CareerCompassPage = () => {
       </div>
 
       {/* Career Insights */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">Career Insights</h2>
+      <div className={`mt-8 rounded-xl shadow-sm border p-6 ${
+        isDarkMode 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-100'
+      }`}>
+        <h2 className={`text-xl font-bold mb-4 ${
+          isDarkMode 
+            ? 'text-white' 
+            : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+        }`}>Career Insights</h2>
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-800 mb-2">🇳🇬 Nigerian Job Market</h3>
-            <p className="text-blue-700 text-sm">
+          <div className={`rounded-lg p-4 ${
+            isDarkMode ? 'bg-blue-600/20' : 'bg-blue-50'
+          }`}>
+            <h3 className={`font-semibold mb-2 ${
+              isDarkMode ? 'text-blue-300' : 'text-blue-800'
+            }`}>🇳🇬 Nigerian Job Market</h3>
+            <p className={`text-sm ${
+              isDarkMode ? 'text-blue-200' : 'text-blue-700'
+            }`}>
               Tech sector growing at 15% annually. High demand for software engineers, 
               data scientists, and digital marketers.
             </p>
           </div>
-          <div className="bg-green-50 rounded-lg p-4">
-            <h3 className="font-semibold text-green-800 mb-2">💡 Career Tip</h3>
-            <p className="text-green-700 text-sm">
+          <div className={`rounded-lg p-4 ${
+            isDarkMode ? 'bg-green-600/20' : 'bg-green-50'
+          }`}>
+            <h3 className={`font-semibold mb-2 ${
+              isDarkMode ? 'text-green-300' : 'text-green-800'
+            }`}>💡 Career Tip</h3>
+            <p className={`text-sm ${
+              isDarkMode ? 'text-green-200' : 'text-green-700'
+            }`}>
               Start building your portfolio early. Nigerian employers value 
               practical skills and real-world projects.
             </p>

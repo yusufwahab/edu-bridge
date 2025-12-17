@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import StudyPactCreation from './StudyPactCreation';
 import StudyPactNotifications from './StudyPactNotifications';
+import { useTheme } from '../contexts/ThemeContext';
 import { Users, Plus, Calendar, Flame, UserPlus, Bell, Clock, AlertTriangle, CheckCircle, X } from 'lucide-react';
 
 const StudyPactsPage = () => {
+  const { isDarkMode } = useTheme();
   const [currentView, setCurrentView] = useState('overview');
   const [pacts, setPacts] = useState([]);
   const [activePact, setActivePact] = useState(null);
@@ -61,8 +63,8 @@ const StudyPactsPage = () => {
             <Users className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Study Pacts</h1>
-            <p className="text-gray-600">Study with friends for accountability</p>
+            <h1 className={`text-2xl sm:text-3xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Study Pacts</h1>
+            <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Study with friends for accountability</p>
           </div>
         </div>
         <button
@@ -76,58 +78,58 @@ const StudyPactsPage = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl p-6 shadow-lg`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
               <Flame className="w-5 h-5 text-orange-600" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">7</div>
-              <div className="text-sm text-gray-600">Day Streak</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>7</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Day Streak</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl p-6 shadow-lg`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
               <Users className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">{pacts.length}</div>
-              <div className="text-sm text-gray-600">Total Pacts</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pacts.length}</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total Pacts</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl p-6 shadow-lg`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">15</div>
-              <div className="text-sm text-gray-600">Completed</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>15</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Completed</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl p-6 shadow-lg`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
               <Users className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">5</div>
-              <div className="text-sm text-gray-600">Study Partners</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>5</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Study Partners</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Active Pacts */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">Active Pacts</h2>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6 mb-6`}>
+        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Active Pacts</h2>
         {activePact ? (
           <div className="border border-green-200 bg-green-50 rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
@@ -142,23 +144,23 @@ const StudyPactsPage = () => {
             </p>
           </div>
         ) : (
-          <p className="text-gray-500">No active pacts. Create one to get started!</p>
+          <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>No active pacts. Create one to get started!</p>
         )}
       </div>
 
       {/* Recent Pacts */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">Recent Pacts</h2>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Recent Pacts</h2>
         <div className="space-y-3">
           {[
             { subject: 'JAMB Physics', date: 'Yesterday', status: 'completed', participants: ['Chidi', 'Kemi'] },
             { subject: 'WAEC Chemistry', date: '2 days ago', status: 'completed', participants: ['Amaka', 'Tunde'] },
             { subject: 'JAMB English', date: '3 days ago', status: 'broken', participants: ['Chidi'] }
           ].map((pact, index) => (
-            <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+            <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${isDarkMode ? 'border border-gray-600' : 'border border-gray-200'}`}>
               <div>
-                <h4 className="font-medium text-gray-800">{pact.subject}</h4>
-                <p className="text-sm text-gray-600">{pact.date} • With: {pact.participants.join(', ')}</p>
+                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pact.subject}</h4>
+                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{pact.date} • With: {pact.participants.join(', ')}</p>
               </div>
               <span className={`px-2 py-1 rounded text-sm ${
                 pact.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -172,9 +174,9 @@ const StudyPactsPage = () => {
 
       {/* Study Requests */}
       {studyRequests.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6 mb-6`}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent flex items-center">
+            <h2 className={`text-xl font-bold flex items-center ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>
               <UserPlus className="w-5 h-5 mr-2" />
               Study Requests
             </h2>
@@ -267,8 +269,8 @@ const StudyPactsPage = () => {
       )}
 
       {/* Pact Activity Feed */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4 flex items-center">
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6 mb-6`}>
+        <h2 className={`text-xl font-bold mb-4 flex items-center ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>
           <Flame className="w-5 h-5 mr-2 text-orange-500" />
           Live Activity
         </h2>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import { Target, BookOpen, TrendingUp, Calendar, Clock, Download, Filter } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 const LearningPage = () => {
+  const { isDarkMode } = useTheme();
   const [activeTab, setActiveTab] = useState('predictions');
   const [selectedSubject, setSelectedSubject] = useState('Mathematics');
   const [examType, setExamType] = useState('JAMB');
@@ -72,12 +74,12 @@ const LearningPage = () => {
   const renderPredictionsTab = () => (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
         <div className="flex flex-wrap items-center gap-4 mb-4">
           <select 
             value={examType}
             onChange={(e) => setExamType(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2"
+            className={`border rounded-lg px-3 py-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
           >
             {examTypes.map(type => (
               <option key={type} value={type}>{type}</option>
@@ -86,7 +88,7 @@ const LearningPage = () => {
           <select 
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="border border-gray-300 rounded-lg px-3 py-2"
+            className={`border rounded-lg px-3 py-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
           >
             {subjects.map(subject => (
               <option key={subject} value={subject}>{subject}</option>
@@ -98,20 +100,20 @@ const LearningPage = () => {
           </button>
         </div>
         
-        <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">📊 {examType} 2025 PREDICTIONS</h2>
-        <p className="text-gray-600">Based on 15 years of historical data and AI analysis</p>
+        <h2 className={`text-xl sm:text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>📊 {examType} 2025 PREDICTIONS</h2>
+        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Based on 15 years of historical data and AI analysis</p>
       </div>
 
       {/* Predictions */}
       {isLoading ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-8 text-center`}>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Analyzing exam patterns...</p>
+          <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Analyzing exam patterns...</p>
         </div>
       ) : (
         <div className="space-y-4">
           {/* High Priority Topics */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
             <h3 className="text-lg font-semibold text-red-900 mb-4">🚨 HIGH PROBABILITY (85%+)</h3>
             {predictions.filter(p => p.status === 'high').map((topic, index) => (
               <div key={index} className="border border-red-200 rounded-lg p-4 mb-3 bg-red-50">
@@ -151,7 +153,7 @@ const LearningPage = () => {
           </div>
 
           {/* Medium Priority Topics */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
             <h3 className="text-lg font-semibold text-yellow-900 mb-4">⚠️ MEDIUM PROBABILITY (60-85%)</h3>
             {predictions.filter(p => p.status === 'medium').map((topic, index) => (
               <div key={index} className="border border-yellow-200 rounded-lg p-4 mb-3 bg-yellow-50">
@@ -188,8 +190,8 @@ const LearningPage = () => {
           </div>
 
           {/* Readiness Score */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">🎯 Your Overall Readiness</h3>
+          <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+            <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>🎯 Your Overall Readiness</h3>
             <div className="flex items-center justify-center">
               <div className="relative w-32 h-32">
                 <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
@@ -208,11 +210,11 @@ const LearningPage = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">72%</span>
+                  <span className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>72%</span>
                 </div>
               </div>
             </div>
-            <p className="text-center text-gray-600 mt-4">
+            <p className={`text-center mt-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               You're well-prepared! Focus on high-priority topics to reach 85%
             </p>
           </div>
@@ -224,12 +226,12 @@ const LearningPage = () => {
   const renderPracticeTab = () => (
     <div className="space-y-6">
       {/* Quiz Generator */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">📝 START A QUIZ</h2>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>📝 START A QUIZ</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Select Exam Type:</label>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Select Exam Type:</label>
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
               {examTypes.map(type => (
                 <button
@@ -238,7 +240,7 @@ const LearningPage = () => {
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     examType === type
                       ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {type}
@@ -248,11 +250,11 @@ const LearningPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Select Subject:</label>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Select Subject:</label>
             <select 
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
+              className={`w-full border rounded-lg px-3 py-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
             >
               {subjects.map(subject => (
                 <option key={subject} value={subject}>{subject}</option>
@@ -262,13 +264,13 @@ const LearningPage = () => {
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Number of Questions:</label>
+          <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Number of Questions:</label>
           <div className="flex space-x-3">
             {[10, 20, 30, 50].map(count => (
               <button
                 key={count}
                 onClick={() => generateQuiz('mixed', count)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+                className={`px-4 py-2 rounded-lg font-medium ${isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               >
                 {count}
               </button>
@@ -277,13 +279,13 @@ const LearningPage = () => {
         </div>
 
         <div className="mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty:</label>
+          <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Difficulty:</label>
           <div className="flex space-x-3">
             {['Easy', 'Medium', 'Hard', 'Mixed'].map(difficulty => (
               <button
                 key={difficulty}
                 onClick={() => generateQuiz(difficulty.toLowerCase(), 20)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium"
+                className={`px-4 py-2 rounded-lg font-medium ${isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
               >
                 {difficulty}
               </button>
@@ -305,31 +307,31 @@ const LearningPage = () => {
       </div>
 
       {/* Question Trading */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">🔄 ExamSwap Question Trading</h3>
-        <p className="text-gray-600 mb-4">Trade questions with other students and earn coins</p>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>🔄 ExamSwap Question Trading</h3>
+        <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Trade questions with other students and earn coins</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div className="border border-gray-200 rounded-lg p-4">
-            <h4 className="font-medium bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">"Hard Calculus Pack" by @ChidiExcel</h4>
+          <div className={`border rounded-lg p-4 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <h4 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>"Hard Calculus Pack" by @ChidiExcel</h4>
             <div className="flex items-center space-x-2 mb-2">
               <div className="flex text-yellow-400">
                 {'★'.repeat(5)}
               </div>
-              <span className="text-sm text-gray-600">50 coins</span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>50 coins</span>
             </div>
             <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
               Buy
             </button>
           </div>
           
-          <div className="border border-gray-200 rounded-lg p-4">
-            <h4 className="font-medium bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">"WAEC Chemistry 2024 Style" by @AdaGenius</h4>
+          <div className={`border rounded-lg p-4 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+            <h4 className={`font-medium mb-2 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>"WAEC Chemistry 2024 Style" by @AdaGenius</h4>
             <div className="flex items-center space-x-2 mb-2">
               <div className="flex text-yellow-400">
                 {'★'.repeat(4)}
               </div>
-              <span className="text-sm text-gray-600">30 coins</span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>30 coins</span>
             </div>
             <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
               Buy
@@ -340,7 +342,7 @@ const LearningPage = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-lg">🪙</span>
-            <span className="font-medium">Your Question Coins: 120</span>
+            <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Your Question Coins: 120</span>
           </div>
           <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700">
             Create Question to Earn Coins
@@ -353,12 +355,12 @@ const LearningPage = () => {
   const renderProgressTab = () => (
     <div className="space-y-6">
       {/* Performance Analytics */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">📈 PERFORMANCE ANALYTICS</h2>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h2 className={`text-xl font-semibold mb-6 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>📈 PERFORMANCE ANALYTICS</h2>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div>
-            <h3 className="text-lg font-medium bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">Subject Breakdown</h3>
+            <h3 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Subject Breakdown</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={progressData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -372,7 +374,7 @@ const LearningPage = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-medium bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">Weekly Progress</h3>
+            <h3 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Weekly Progress</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={weeklyProgress}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -387,15 +389,15 @@ const LearningPage = () => {
       </div>
 
       {/* Subject Performance */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">Subject Performance</h3>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Subject Performance</h3>
         <div className="space-y-4">
           {progressData.map((subject, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+            <div key={index} className={`border rounded-lg p-4 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               <div className="flex justify-between items-center mb-2">
-                <h4 className="font-medium bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">{subject.subject}</h4>
+                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>{subject.subject}</h4>
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">{subject.current}%</span>
+                  <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>{subject.current}%</span>
                   <span className={`text-sm ${subject.improvement > 0 ? 'text-green-600' : subject.improvement < 0 ? 'text-red-600' : 'text-gray-600'}`}>
                     {subject.improvement > 0 ? '+' : ''}{subject.improvement}% this week
                     {subject.improvement > 0 ? ' 📈' : subject.improvement < 0 ? ' 📉' : ''}
@@ -415,7 +417,7 @@ const LearningPage = () => {
 
       {/* Strengths and Weaknesses */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
           <h3 className="text-lg font-semibold text-green-900 mb-4">✅ Strengths</h3>
           <div className="space-y-2">
             <div className="bg-green-50 border border-green-200 rounded-lg p-3">
@@ -430,7 +432,7 @@ const LearningPage = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
           <h3 className="text-lg font-semibold text-red-900 mb-4">⚠️ Needs Work</h3>
           <div className="space-y-2">
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
@@ -451,9 +453,9 @@ const LearningPage = () => {
   const renderPlansTab = () => (
     <div className="space-y-6">
       {/* Study Plan Header */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">🗓️ YOUR PERSONALIZED STUDY PLAN</h2>
-        <p className="text-gray-600 mb-4">JAMB 2025 - 47 days remaining</p>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h2 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>🗓️ YOUR PERSONALIZED STUDY PLAN</h2>
+        <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>JAMB 2025 - 47 days remaining</p>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="font-semibold text-blue-900 mb-2">AI Recommendations:</h3>
@@ -464,11 +466,11 @@ const LearningPage = () => {
       </div>
 
       {/* This Week's Plan */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-4">This Week's Focus:</h3>
+      <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
+        <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>This Week's Focus:</h3>
         <div className="space-y-3">
           {studyPlan.map((plan, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+            <div key={index} className={`border rounded-lg p-4 ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <input 
@@ -477,10 +479,10 @@ const LearningPage = () => {
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
-                    <h4 className="font-medium bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                    <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>
                       {plan.day}: {plan.subject}
                     </h4>
-                    <p className="text-sm text-gray-600">{plan.duration}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{plan.duration}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -516,9 +518,9 @@ const LearningPage = () => {
   );
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full">
       {/* Tab Navigation */}
-      <div className="bg-white border-b border-gray-200">
+      <div className={`${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b`}>
         <div className="flex space-x-4 sm:space-x-8 px-3 sm:px-6 overflow-x-auto">
           {[
             { id: 'predictions', label: 'Predictions', icon: '📊' },
@@ -532,7 +534,7 @@ const LearningPage = () => {
               className={`py-4 px-2 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : isDarkMode ? 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               <span className="mr-2">{tab.icon}</span>
