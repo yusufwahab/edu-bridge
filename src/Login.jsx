@@ -66,7 +66,14 @@ export default function Login({setUser}) {
       localStorage.setItem('token', res.data.token);
       console.log('Authentication successful:', res.data);
       setUser(res.data.user);
-      navigate('/dashboard');
+      
+      // Check if user has completed onboarding
+      const onboardingData = localStorage.getItem('onboardingData');
+      if (!onboardingData || !JSON.parse(onboardingData).onboardingCompleted) {
+        navigate('/onboarding/welcome');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error('Authentication error:', err);
       alert(err.response?.data?.message || 'An error occurred. Please try again.');
@@ -77,12 +84,12 @@ export default function Login({setUser}) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-100 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8 grid place-items-center">
           <img src={YabvilPrepLogo}  alt="Logo" className="w-15 h-15"/>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
             YabvilPrep CBT
           </h1>
           <p className="text-gray-600 mt-2">Nigerian Educational Testing Platform</p>
@@ -91,7 +98,7 @@ export default function Login({setUser}) {
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Welcome Back</h2>
             <p className="text-gray-600 mt-1">Sign in to your account</p>
           </div>
 
@@ -157,7 +164,7 @@ export default function Login({setUser}) {
               onClick={handleSubmit}
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+              className="w-full bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 hover:from-gray-800 hover:via-blue-800 hover:to-indigo-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">

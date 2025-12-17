@@ -83,10 +83,10 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-lg flex items-center justify-center">
                 <img src={YabvilPrepLogo} alt='Logo' />
               </div>
-              <span className="text-2xl font-bold text-gray-900">YabvilPrep</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">YabvilPrep</span>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
@@ -96,7 +96,7 @@ const LandingPage = () => {
               <button onClick={() => scrollToSection('testimonials')} className="text-gray-600 hover:text-blue-600 transition-colors">Reviews</button>
               <button onClick={() => {
                 navigate('./login')
-              } } className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300">
+              } } className="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300">
                 Get Started
               </button>
             </div>
@@ -118,7 +118,7 @@ const LandingPage = () => {
               <button onClick={() => scrollToSection('solution')} className="block px-3 py-2 text-gray-600 hover:text-blue-600">Solution</button>
               <button onClick={() => scrollToSection('features')} className="block px-3 py-2 text-gray-600 hover:text-blue-600">Features</button>
               <button onClick={() => scrollToSection('testimonials')} className="block px-3 py-2 text-gray-600 hover:text-blue-600">Reviews</button>
-              <button onClick={ () => {navigate('./login')}} className="block w-full text-left px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg mt-2">
+              <button onClick={ () => {navigate('./login')}} className="block w-full text-left px-3 py-2 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white rounded-lg mt-2">
                 Get Started
               </button>
             </div>
@@ -132,9 +132,8 @@ const LandingPage = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                  Bridging the gap in 
-                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> student learning</span>
+                <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent leading-tight">
+                  Bridging the gap in student learning
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
                   Access quality education resources, practice with real exam questions, and prepare for WAEC/UTME success - even offline.
@@ -142,7 +141,7 @@ const LandingPage = () => {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <button onClick={ () => {navigate('./login')}}  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2">
+                <button onClick={ () => {navigate('./login')}}  className="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2">
                   <span>Start Learning Free</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
@@ -169,7 +168,7 @@ const LandingPage = () => {
             </div>
 
             <div className="relative">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-3xl p-8 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
                 <div className="bg-white rounded-2xl p-6 space-y-4">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
@@ -210,7 +209,7 @@ const LandingPage = () => {
       <section id="problem" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">The Educational Crisis We're Solving</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">The Educational Crisis We're Solving</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Millions of students across Africa face significant barriers to quality education and exam preparation.
             </p>
@@ -221,7 +220,7 @@ const LandingPage = () => {
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
                 <Globe className="w-6 h-6 text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Limited Internet Access</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Limited Internet Access</h3>
               <p className="text-gray-600">Many students can't access online resources due to poor connectivity or high data costs.</p>
             </div>
 
@@ -229,7 +228,7 @@ const LandingPage = () => {
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                 <BookOpen className="w-6 h-6 text-orange-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Poor Exam Preparation</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Poor Exam Preparation</h3>
               <p className="text-gray-600">Students lack access to quality past questions and effective study methods for WAEC/UTME.</p>
             </div>
 
@@ -237,7 +236,7 @@ const LandingPage = () => {
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
                 <Users className="w-6 h-6 text-yellow-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Language Barriers</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Language Barriers</h3>
               <p className="text-gray-600">Complex study materials in foreign languages hinder student comprehension.</p>
             </div>
 
@@ -245,13 +244,13 @@ const LandingPage = () => {
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
                 <TrendingUp className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Expensive Resources</h3>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Expensive Resources</h3>
               <p className="text-gray-600">Quality educational materials and tutoring are often too expensive for many families.</p>
             </div>
           </div>
 
           {/* Student Story */}
-          <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+          <div className="mt-16 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-2xl p-8 text-white">
             <div className="max-w-4xl mx-auto text-center">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Users className="w-8 h-8" />
@@ -272,7 +271,7 @@ const LandingPage = () => {
       <section id="solution" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Solution: YabvilPrep</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Our Solution: YabvilPrep</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               A comprehensive mobile and web platform that makes quality education accessible to every student, 
               regardless of their location or economic background.
@@ -287,7 +286,7 @@ const LandingPage = () => {
                     <Download className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Offline-First Learning</h3>
+                    <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Offline-First Learning</h3>
                     <p className="text-gray-600">Download tutorials, quizzes, and past questions to study anytime, anywhere - no internet required.</p>
                   </div>
                 </div>
@@ -297,7 +296,7 @@ const LandingPage = () => {
                     <BookOpen className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Smart Quiz Generation</h3>
+                    <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Smart Quiz Generation</h3>
                     <p className="text-gray-600">Automatically convert your notes into interactive quizzes using AI technology.</p>
                   </div>
                 </div>
@@ -307,7 +306,7 @@ const LandingPage = () => {
                     <Globe className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Local Language Support</h3>
+                    <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Local Language Support</h3>
                     <p className="text-gray-600">Break language barriers with translations in Hausa, Yoruba, Igbo, and other local languages.</p>
                   </div>
                 </div>
@@ -317,7 +316,7 @@ const LandingPage = () => {
                     <Target className="w-6 h-6 text-orange-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Personalized Study Plans</h3>
+                    <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Personalized Study Plans</h3>
                     <p className="text-gray-600">Get customized study schedules and mock tests tailored to your exam goals and learning pace.</p>
                   </div>
                 </div>
@@ -364,7 +363,7 @@ const LandingPage = () => {
       <section id="features" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">Powerful Features for Every Student</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Powerful Features for Every Student</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Everything you need to succeed in your exams, designed with African students in mind.
             </p>
@@ -373,10 +372,10 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-login-y-1">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mb-4 text-white">
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-lg flex items-center justify-center mb-4 text-white">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-3">{feature.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
@@ -388,7 +387,7 @@ const LandingPage = () => {
       <section id="testimonials" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">What Students Are Saying</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">What Students Are Saying</h2>
             <p className="text-xl text-gray-600">Join thousands of students who have improved their results with YabvilPrep</p>
           </div>
 
@@ -426,7 +425,7 @@ const LandingPage = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
           <p className="text-xl opacity-90 max-w-4xl mx-auto leading-relaxed mb-8">
@@ -454,7 +453,7 @@ const LandingPage = () => {
       {/* CTA Section */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">Ready to Bridge Your Learning Gap?</h2>
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Ready to Bridge Your Learning Gap?</h2>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Join thousands of students who are already improving their exam results with YabvilPrep. 
             Start your journey to academic success today.
@@ -462,7 +461,7 @@ const LandingPage = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <button onClick={ () => {navigate('./login')}} 
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2">
+            className="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2">
               <span>Get Started Free</span>
               <ArrowRight className="w-5 h-5" />
             </button>
@@ -483,7 +482,7 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-lg flex items-center justify-center">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold">YabvilPrep</span>
