@@ -88,9 +88,11 @@ export default function Login({setUser}) {
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8 grid place-items-center">
-          <img src={YabvilPrepLogo}  alt="Logo" className="w-15 h-15"/>
+          <div className="w-16 h-16 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-xl flex items-center justify-center mb-4">
+            <span className="text-white font-bold text-xl tracking-tighter">CSC</span>
+          </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-            YabvilPrep CBT
+            Classence CBT
           </h1>
           <p className="text-gray-600 mt-2">Nigerian Educational Testing Platform</p>
         </div>

@@ -77,7 +77,7 @@ const Dashboard = () => {
         <div className="bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold mb-2">🎉 Welcome to YabvilPrep, {userData?.fullName?.split(' ')[0] || 'Student'}!</h2>
+              <h2 className="text-xl sm:text-2xl font-bold mb-2">🎉 Welcome to Classence, {userData?.fullName?.split(' ')[0] || 'Student'}!</h2>
               <p className="text-blue-100 mb-4">Your personalized learning journey starts now. Let's ace that {userData?.examTarget || 'exam'}!</p>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <button 

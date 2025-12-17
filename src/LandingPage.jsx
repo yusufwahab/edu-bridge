@@ -14,7 +14,7 @@ const LandingPage = () => {
     {
       name: "Fatima A.",
       role: "UTME Candidate",
-      text: "YabvilPrep helped me pass UTME on my first try! The offline feature was a game-changer since I don't have constant internet access.",
+      text: "Classence helped me pass UTME on my first try! The offline feature was a game-changer since I don't have constant internet access.",
       rating: 5
     },
     {
@@ -26,7 +26,7 @@ const LandingPage = () => {
     {
       name: "Mrs. Sarah M.",
       role: "Parent",
-      text: "Finally, an affordable solution for quality exam prep. My son's confidence has grown tremendously since using YabvilPrep.",
+      text: "Finally, an affordable solution for quality exam prep. My son's confidence has grown tremendously since using Classence.",
       rating: 5
     }
   ];
@@ -84,9 +84,9 @@ const LandingPage = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-lg flex items-center justify-center">
-                <img src={YabvilPrepLogo} alt='Logo' />
+                <span className="text-white font-bold text-sm tracking-tighter">CSC</span>
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">YabvilPrep</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Classence</span>
             </div>
             
             <div className="hidden md:flex items-center space-x-8">
@@ -271,7 +271,7 @@ const LandingPage = () => {
       <section id="solution" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Our Solution: YabvilPrep</h2>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Our Solution: Classence</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               A comprehensive mobile and web platform that makes quality education accessible to every student, 
               regardless of their location or economic background.
@@ -388,7 +388,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">What Students Are Saying</h2>
-            <p className="text-xl text-gray-600">Join thousands of students who have improved their results with YabvilPrep</p>
+            <p className="text-xl text-gray-600">Join thousands of students who have improved their results with Classence</p>
           </div>
 
           <div className="relative">
@@ -429,7 +429,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
           <p className="text-xl opacity-90 max-w-4xl mx-auto leading-relaxed mb-8">
-            YabvilPrep isn't just an app, it's a bridge to brighter futures. We believe every student deserves access to quality education, 
+            Classence isn't just an app, it's a bridge to brighter futures. We believe every student deserves access to quality education, 
             regardless of their background or location. Our mission is to democratize learning and help millions of African students 
             achieve their academic dreams.
           </p>
@@ -455,7 +455,7 @@ const LandingPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Ready to Bridge Your Learning Gap?</h2>
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Join thousands of students who are already improving their exam results with YabvilPrep. 
+            Join thousands of students who are already improving their exam results with Classence. 
             Start your journey to academic success today.
           </p>
           
@@ -483,9 +483,9 @@ const LandingPage = () => {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-white" />
+                  <span className="text-white font-bold text-sm tracking-tighter">CSC</span>
                 </div>
-                <span className="text-2xl font-bold">YabvilPrep</span>
+                <span className="text-2xl font-bold">Classence</span>
               </div>
               <p className="text-gray-400 leading-relaxed">
                 Bridging the gap in student learning and exam preparation across Africa.
@@ -525,7 +525,7 @@ const LandingPage = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 YabvilPrep. All rights reserved. Abdulwahab Boluwatife Yusuf.</p>
+            <p>&copy; 2025 Classence. All rights reserved. Abdulwahab Boluwatife Yusuf.</p>
           </div>
         </div>s
       </footer>

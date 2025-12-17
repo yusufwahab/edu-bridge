@@ -135,7 +135,7 @@ const SettingsPage = () => {
             ? 'text-white' 
             : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
         }`}>Settings</h1>
-        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Customize your YabvilPrep experience</p>
+        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Customize your Classence experience</p>
       </div>
 
       <div className="space-y-6">
