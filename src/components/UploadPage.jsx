@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import { BookOpen, Upload as UploadIcon, Camera, FileText, PenTool, CreditCard, HelpCircle, FileCheck } from 'lucide-react';
 
 const UploadPage = ({ onBack }) => {
+  const { isDarkMode } = useTheme();
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
@@ -42,19 +44,25 @@ const UploadPage = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className={`shadow-sm border-b ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
                 onClick={onBack}
-                className="text-gray-600 hover:text-gray-800 flex items-center font-medium"
+                className={`flex items-center font-medium ${
+                  isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'
+                }`}
               >
                 ← Back to Features
               </button>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Upload Notes</h1>
+              <h1 className={`text-2xl font-bold ${
+                isDarkMode 
+                  ? 'text-white' 
+                  : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+              }`}>Upload Notes</h1>
             </div>
           </div>
         </div>
@@ -62,26 +70,42 @@ const UploadPage = ({ onBack }) => {
 
       <div className="max-w-6xl mx-auto p-6">
         {/* Upload Section */}
-        <div className="bg-white rounded-xl shadow-sm border p-8 mb-8">
+        <div className={`rounded-xl shadow-sm border p-8 mb-8 ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-100'
+        }`}>
           <div className="mb-8">
             <BookOpen className="w-16 h-16 text-blue-600 mb-4" />
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Transform Your Notes</h2>
-            <p className="text-gray-600 text-lg">Upload your study materials and turn them into interactive learning tools</p>
+            <h2 className={`text-3xl font-bold mb-2 ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Transform Your Notes</h2>
+            <p className={`text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Upload your study materials and turn them into interactive learning tools</p>
           </div>
 
           {/* Drag & Drop Area */}
           <div
             className={`border-2 border-dashed rounded-xl p-12 text-center transition-colors ${
-              dragActive ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+              dragActive 
+                ? 'border-blue-400 ' + (isDarkMode ? 'bg-blue-900/20' : 'bg-blue-50')
+                : isDarkMode
+                  ? 'border-gray-600 hover:border-blue-400 hover:bg-blue-900/20'
+                  : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
           >
-            <UploadIcon className="w-12 h-12 text-gray-400 mb-4 mx-auto" />
-            <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Drop files here or click to upload</h3>
-            <p className="text-gray-600 mb-6">Support for PDF, JPG, PNG, DOC, DOCX files</p>
+            <UploadIcon className={`w-12 h-12 mb-4 mx-auto ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+            <h3 className={`text-xl font-semibold mb-2 ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Drop files here or click to upload</h3>
+            <p className={`mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Support for PDF, JPG, PNG, DOC, DOCX files</p>
             <button
               onClick={() => fileInputRef.current?.click()}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
@@ -94,47 +118,69 @@ const UploadPage = ({ onBack }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-6 border border-gray-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-colors"
+              className={`p-6 border rounded-xl transition-colors ${
+                isDarkMode 
+                  ? 'border-gray-600 hover:border-blue-400 hover:bg-blue-900/20' 
+                  : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+              }`}
             >
-              <Camera className="w-8 h-8 text-gray-600 mb-3 mx-auto" />
-              <div className="font-semibold text-gray-900 mb-2">Take Photo</div>
-              <div className="text-sm text-gray-600">Capture notes or whiteboard</div>
+              <Camera className={`w-8 h-8 mb-3 mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+              <div className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Take Photo</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Capture notes or whiteboard</div>
             </button>
             
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-6 border border-gray-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-colors"
+              className={`p-6 border rounded-xl transition-colors ${
+                isDarkMode 
+                  ? 'border-gray-600 hover:border-blue-400 hover:bg-blue-900/20' 
+                  : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+              }`}
             >
-              <FileText className="w-8 h-8 text-gray-600 mb-3 mx-auto" />
-              <div className="font-semibold text-gray-900 mb-2">Upload PDF</div>
-              <div className="text-sm text-gray-600">Textbooks and handouts</div>
+              <FileText className={`w-8 h-8 mb-3 mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+              <div className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Upload PDF</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Textbooks and handouts</div>
             </button>
             
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-6 border border-gray-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-colors"
+              className={`p-6 border rounded-xl transition-colors ${
+                isDarkMode 
+                  ? 'border-gray-600 hover:border-blue-400 hover:bg-blue-900/20' 
+                  : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+              }`}
             >
-              <PenTool className="w-8 h-8 text-gray-600 mb-3 mx-auto" />
-              <div className="font-semibold text-gray-900 mb-2">Handwritten Notes</div>
-              <div className="text-sm text-gray-600">Scan your writing</div>
+              <PenTool className={`w-8 h-8 mb-3 mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+              <div className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Handwritten Notes</div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Scan your writing</div>
             </button>
           </div>
         </div>
 
         {/* Uploaded Files */}
         {uploadedFiles.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-6">Your Uploaded Files</h3>
+          <div className={`rounded-xl shadow-sm border p-6 ${
+            isDarkMode 
+              ? 'bg-gray-800 border-gray-700' 
+              : 'bg-white border-gray-100'
+          }`}>
+            <h3 className={`text-xl font-bold mb-6 ${
+              isDarkMode 
+                ? 'text-white' 
+                : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+            }`}>Your Uploaded Files</h3>
             <div className="space-y-4">
               {uploadedFiles.map(file => (
-                <div key={file.id} className="border border-gray-200 rounded-lg p-6">
+                <div key={file.id} className={`border rounded-lg p-6 ${
+                  isDarkMode ? 'border-gray-600' : 'border-gray-200'
+                }`}>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-4">
                       <FileCheck className="w-8 h-8 text-blue-600 mt-1" />
                       <div>
-                        <h4 className="font-semibold text-gray-900 text-lg">{file.name}</h4>
-                        <p className="text-gray-600">Uploaded {file.uploadedAt.toLocaleDateString()}</p>
-                        <p className="text-sm text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                        <h4 className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{file.name}</h4>
+                        <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Uploaded {file.uploadedAt.toLocaleDateString()}</p>
+                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2">

@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import { Volume2, Save, RotateCcw, Mic, Paperclip, Send } from 'lucide-react';
 import { textToSpeech } from '../utils/textToSpeech';
 
 const ChatPage = ({ onBack }) => {
+  const { isDarkMode } = useTheme();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -115,31 +117,37 @@ const ChatPage = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className={`shadow-sm border-b ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
         <div className="max-w-4xl mx-auto px-3 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center space-x-4">
               <button 
                 onClick={onBack}
-                className="text-gray-600 hover:text-gray-800 flex items-center font-medium"
+                className={`flex items-center font-medium ${
+                  isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'
+                }`}
               >
                 ← Back to Features
               </button>
               <div className="flex items-center space-x-3">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="font-semibold text-gray-900">Study Buddy AI</span>
+                <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Study Buddy AI</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600">
+              <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 Style: {learningStyle ? `${learningStyle.dominantStyle}` : 'Adaptive'}
               </div>
               <select 
                 value={selectedLanguage}
                 onChange={(e) => setSelectedLanguage(e.target.value)}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1"
+                className={`text-sm border rounded-lg px-3 py-1 ${
+                  isDarkMode 
+                    ? 'border-gray-600 bg-gray-700 text-white' 
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
               >
                 {languages.map(lang => (
                   <option key={lang} value={lang}>{lang}</option>
@@ -159,11 +167,15 @@ const ChatPage = ({ onBack }) => {
               <div className={`max-w-xs sm:max-w-2xl px-4 sm:px-6 py-3 sm:py-4 rounded-2xl shadow-sm ${
                 message.type === 'user' 
                   ? 'bg-blue-600 text-white' 
-                  : 'bg-white text-gray-900 border'
+                  : isDarkMode
+                    ? 'bg-gray-800 text-white border border-gray-700'
+                    : 'bg-white text-gray-900 border'
               }`}>
                 <p className="text-sm leading-relaxed">{message.content}</p>
                 {message.type === 'ai' && (
-                  <div className="flex items-center space-x-4 mt-3 pt-3 border-t border-gray-100">
+                  <div className={`flex items-center space-x-4 mt-3 pt-3 border-t ${
+                    isDarkMode ? 'border-gray-600' : 'border-gray-100'
+                  }`}>
                     <button 
                       onClick={async () => {
                         setTtsLoading(message.id);
@@ -171,15 +183,27 @@ const ChatPage = ({ onBack }) => {
                         setTtsLoading(null);
                       }}
                       disabled={ttsLoading === message.id}
-                      className="text-xs text-gray-500 hover:text-blue-600 flex items-center space-x-1 disabled:opacity-50"
+                      className={`text-xs flex items-center space-x-1 disabled:opacity-50 ${
+                        isDarkMode 
+                          ? 'text-gray-400 hover:text-blue-400' 
+                          : 'text-gray-500 hover:text-blue-600'
+                      }`}
                     >
                       <Volume2 className="w-3 h-3" />
                       <span>{ttsLoading === message.id ? 'Loading...' : 'Listen'}</span>
                     </button>
-                    <button className="text-xs text-gray-500 hover:text-blue-600 flex items-center space-x-1">
+                    <button className={`text-xs flex items-center space-x-1 ${
+                      isDarkMode 
+                        ? 'text-gray-400 hover:text-blue-400' 
+                        : 'text-gray-500 hover:text-blue-600'
+                    }`}>
                       <Save className="w-3 h-3" /><span>Save</span>
                     </button>
-                    <button className="text-xs text-gray-500 hover:text-blue-600 flex items-center space-x-1">
+                    <button className={`text-xs flex items-center space-x-1 ${
+                      isDarkMode 
+                        ? 'text-gray-400 hover:text-blue-400' 
+                        : 'text-gray-500 hover:text-blue-600'
+                    }`}>
                       <RotateCcw className="w-3 h-3" /><span>Rephrase</span>
                     </button>
                   </div>
@@ -189,7 +213,11 @@ const ChatPage = ({ onBack }) => {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-white border rounded-2xl px-6 py-4 shadow-sm">
+              <div className={`border rounded-2xl px-6 py-4 shadow-sm ${
+                isDarkMode 
+                  ? 'bg-gray-800 border-gray-700' 
+                  : 'bg-white border-gray-200'
+              }`}>
                 <div className="flex space-x-2">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
@@ -202,7 +230,11 @@ const ChatPage = ({ onBack }) => {
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t p-3 sm:p-6">
+        <div className={`border-t p-3 sm:p-6 ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
           <div className="flex items-end space-x-4">
             <div className="flex-1">
               <textarea
@@ -210,7 +242,11 @@ const ChatPage = ({ onBack }) => {
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMessage())}
                 placeholder="Ask anything about your studies..."
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className={`w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${
+                  isDarkMode 
+                    ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' 
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
                 rows="2"
               />
             </div>
@@ -218,14 +254,22 @@ const ChatPage = ({ onBack }) => {
               <button
                 onClick={startVoiceRecording}
                 className={`p-3 rounded-xl transition-colors ${
-                  isRecording ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  isRecording 
+                    ? 'bg-red-500 text-white' 
+                    : isDarkMode
+                      ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
                 <Mic className="w-5 h-5" />
               </button>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="p-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200"
+                className={`p-3 rounded-xl ${
+                  isDarkMode 
+                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               >
                 <Paperclip className="w-5 h-5" />
               </button>
