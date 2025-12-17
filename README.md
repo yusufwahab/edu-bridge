@@ -1,4 +1,4 @@
-# EduBridge - YabvilPrep
+# Classence - YabvilPrep
 
 **Empowering Nigerian Students Through AI-Driven Education**
 
@@ -12,7 +12,7 @@
 
 ## Project Description
 
-EduBridge (YabvilPrep) is an AI-powered educational platform designed specifically for Nigerian students preparing for major examinations including JAMB, WAEC, NECO, POST-UTME, BECE, NCEE and other standardized tests. The platform provides personalized learning experiences through adaptive AI tutoring, career guidance, collaborative learning features, and comprehensive exam preparation tools.
+Classence (YabvilPrep) is an AI-powered educational platform designed specifically for Nigerian students preparing for major examinations including JAMB, WAEC, NECO, POST-UTME, BECE, NCEE and other standardized tests. The platform provides personalized learning experiences through adaptive AI tutoring, career guidance, collaborative learning features, and comprehensive exam preparation tools.
 
 ### Key Features
 
