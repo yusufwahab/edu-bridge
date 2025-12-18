@@ -57,9 +57,18 @@ Our platform leverages cutting-edge AI technologies to create a personalized lea
 
 ## Smart Attendance System
 
-🌐 **Live Demo**: [https://classence-frontend.vercel.app](https://classence-frontend.vercel.app)
+🌐 **Live Demo**: [https://classence-frontend.vercel.app](https://classence-frontend.vercel.app)  
+🔗 **Backend API**: [https://classencebackend.onrender.com](https://classencebackend.onrender.com)  
+📂 **Backend Repository**: [https://github.com/yusufwahab/ClassenceBackend](https://github.com/yusufwahab/ClassenceBackend)
 
 Our integrated attendance management system provides location-based attendance tracking for educational institutions. The system ensures accurate attendance marking through geolocation verification and real-time session management.
+
+> **Note**: The Smart Attendance System is a separate integrated component which has its own page in the main platform, not the main website. It has been integrated into the main Classence platform frontend URL above (https://yabvilprep.vercel.app). This URL is just for reference if needed.
+
+### Testing Credentials
+
+**Admin Registration Code**: `ADMIN_CODE=YAB3T5VLKX9`  
+*Use this code when creating an admin account (Teachers, Class Reps, Class Captains) for testing purposes.*
 
 ### Key Features
 
