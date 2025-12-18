@@ -24,6 +24,7 @@ Classence (YabvilPrep) is an AI-powered educational platform designed specifical
 - **Text-to-Speech**: Nigerian voice synthesis for audio learning
 - **Study Buddy**: AI companion for motivation and guidance
 - **Progress Tracking**: Comprehensive analytics and performance monitoring
+- **Smart Attendance System**: Geolocation-based attendance tracking with real-time updates
 
 ## AI Integration
 
@@ -53,6 +54,84 @@ Our platform leverages cutting-edge AI technologies to create a personalized lea
 - **Exam Prediction**: AI analyzes past exam patterns to predict likely questions and topics
 - **Performance Forecasting**: Predicts student success probability and identifies areas needing improvement
 - **Personalized Recommendations**: Suggests optimal study schedules and resource allocation
+
+## Smart Attendance System
+
+🌐 **Live Demo**: [https://classence-frontend.vercel.app](https://classence-frontend.vercel.app)
+
+Our integrated attendance management system provides location-based attendance tracking for educational institutions. The system ensures accurate attendance marking through geolocation verification and real-time session management.
+
+### Key Features
+
+- **Geolocation Verification**: Students can only mark attendance when physically present at designated class locations
+- **Real-time Session Management**: Sessions created by admins appear instantly on student dashboards
+- **Multi-role Support**: Teachers, class representatives, and class captains can manage attendance
+- **Multimedia Updates**: Post announcements with voice notes, text, or images
+- **Automated Workflows**: Seamless integration between admin actions and student interfaces
+
+### For Administrators (Teachers, Class Reps, Class Captains)
+
+#### Setup Process:
+1. **Create Department/Class**: Set up organizational structure with relevant details
+2. **Add Subjects**: Create subject categories for attendance tracking
+3. **Schedule Sessions**: Create attendance sessions with specific time slots
+4. **Set Location Parameters**: Define geographical boundaries for attendance marking
+5. **Manage Students**: Register and organize student profiles
+6. **Post Updates**: Share announcements and important information
+
+#### Admin Capabilities:
+- Create and manage multiple classes/departments
+- Set precise location boundaries using GPS coordinates
+- Schedule recurring or one-time attendance sessions
+- View real-time attendance statistics and reports
+- Send multimedia announcements to students
+- Export attendance data for record-keeping
+
+### For Students
+
+#### Registration Process:
+1. **Sign Up**: Register with full name and matriculation number
+2. **Select Department**: Choose class/department from dropdown menu
+3. **Profile Verification**: Complete profile setup and verification
+4. **Dashboard Access**: Access personalized student dashboard
+
+#### Student Features:
+- **One-Click Attendance**: Mark attendance with single button click
+- **Location Verification**: Automatic GPS verification before attendance marking
+- **Session Visibility**: View all available and upcoming sessions
+- **Real-time Updates**: Receive instant notifications about new sessions
+- **Announcement Feed**: Access multimedia updates from teachers and class reps
+- **Attendance History**: Track personal attendance records and statistics
+
+### Technical Implementation
+
+#### Geolocation System:
+- **GPS Accuracy**: Uses device GPS for precise location detection
+- **Boundary Verification**: Checks if student is within designated class perimeter
+- **Fallback Options**: Network-based location for GPS-unavailable scenarios
+- **Privacy Protection**: Location data used only for attendance verification
+
+#### Real-time Synchronization:
+- **Instant Updates**: Admin actions reflect immediately on student interfaces
+- **Session Management**: Automatic session activation and deactivation
+- **Live Notifications**: Push notifications for new sessions and announcements
+- **Data Consistency**: Synchronized data across all user roles
+
+### Integration with Main Platform
+
+The attendance system is seamlessly integrated into the main Classence platform:
+- **Single Sign-On**: Use existing Classence credentials
+- **Unified Dashboard**: Access attendance features from main navigation
+- **Data Synchronization**: Student profiles sync across both systems
+- **Consistent UI/UX**: Maintains platform design language and user experience
+
+### Use Cases
+
+- **Universities**: Lecture attendance tracking with location verification
+- **Secondary Schools**: Class attendance for WAEC/JAMB preparation sessions
+- **Tutorial Centers**: Student attendance for extra-curricular classes
+- **Study Groups**: Organized group study session attendance
+- **Examination Centers**: Candidate verification and attendance tracking
 
 ## Backend Integration
 
@@ -298,5 +377,5 @@ npm run build
 
 ## Team Members
 
-- **Abdulwahab Yusuf** - Frontend Developer
+- **Abdulwahab Yusuf** - Frontend Developer & Smart Attendance System
 - **Salahudeen Mubarak** - AI/ML Engineer

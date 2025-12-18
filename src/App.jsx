@@ -20,6 +20,7 @@ import OnboardingCareerAssessment from "./components/OnboardingCareerAssessment"
 import OnboardingFirstPact from "./components/OnboardingFirstPact";
 import LearningPage from "./components/LearningPage";
 import SettingsPage from "./components/SettingsPage";
+import AttendancePage from "./components/AttendancePage";
 import ProfilePage from "./components/ProfilePage";
 import NotificationsPage from "./components/NotificationsPage";
 import VerifyOTP from "./components/VerifyOTP";
@@ -83,6 +84,7 @@ export default function App() {
         <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
         <Route path="/notifications" element={<Layout><NotificationsPage /></Layout>} />
         <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+        <Route path="/attendance" element={<Layout><AttendancePage /></Layout>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

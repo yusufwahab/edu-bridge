@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { authAPI } from '../utils/api';
-import { Home, Brain, Users, BarChart3, MapPin, BookOpen, Settings, LogOut } from 'lucide-react';
+import { Home, Brain, Users, BarChart3, MapPin, BookOpen, Settings, LogOut, UserCheck } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -33,6 +33,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { id: 'collaborative-learning', label: 'Collaborative', icon: Users, path: '/collaborative-learning' },
     { id: 'career-compass', label: 'Career', icon: MapPin, path: '/career-compass' },
     { id: 'cbt-practice', label: 'CBT Practice', icon: BarChart3, path: '/cbt-practice' },
+    { id: 'attendance', label: 'Attendance', icon: UserCheck, path: '/attendance' },
     { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' }
   ];
 
