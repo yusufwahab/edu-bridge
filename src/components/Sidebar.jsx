@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import { authAPI } from '../utils/api';
 import { Home, Brain, Users, BarChart3, MapPin, BookOpen, Settings, LogOut } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -7,6 +8,22 @@ const Sidebar = ({ isOpen, onClose }) => {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const [user, setUser] = useState({ fullName: '', gradeLevel: '' });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await authAPI.getProfile();
+        setUser({
+          fullName: userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'User',
+          gradeLevel: userData.gradeLevel || 'Student'
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const menuItems = [
     { id: 'dashboard', label: 'Home', icon: Home, path: '/dashboard' },
@@ -90,11 +107,11 @@ const Sidebar = ({ isOpen, onClose }) => {
         <div className={`absolute bottom-0 left-0 right-0 p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-full flex items-center justify-center text-white font-bold">
-              A
+              {user.fullName.charAt(0).toUpperCase() || 'U'}
             </div>
             <div>
-              <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Amaka Okafor</p>
-              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>SS3 Student</p>
+              <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{user.fullName || 'User'}</p>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{user.gradeLevel} Student</p>
             </div>
           </div>
           <button

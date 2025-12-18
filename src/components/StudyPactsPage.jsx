@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import StudyPactCreation from './StudyPactCreation';
 import StudyPactNotifications from './StudyPactNotifications';
 import { useTheme } from '../contexts/ThemeContext';
-import { Users, Plus, Calendar, Flame, UserPlus, Bell, Clock, AlertTriangle, CheckCircle, X } from 'lucide-react';
+import { pactsAPI, activityAPI } from '../utils/api';
+import { Users, Plus, Calendar, Flame, UserPlus, Bell, Clock, AlertTriangle, CheckCircle, X, Mail, Send } from 'lucide-react';
 
 const StudyPactsPage = () => {
   const { isDarkMode } = useTheme();
@@ -15,26 +16,79 @@ const StudyPactsPage = () => {
   ]);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationData, setNotificationData] = useState(null);
+  const [showEmailInput, setShowEmailInput] = useState({});
+  const [emailInputs, setEmailInputs] = useState({});
+  const [sharingPact, setSharingPact] = useState(null);
+  const [pactsStats, setPactsStats] = useState({
+    streak: 0,
+    totalPacts: 0,
+    completedPacts: 0,
+    studyPartners: 0
+  });
+  const [recentPacts, setRecentPacts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem('studyPacts');
-    if (stored) {
-      setPacts(JSON.parse(stored));
+    const fetchPactsData = async () => {
+      try {
+        const [pactsData, analytics, history, streak] = await Promise.all([
+          pactsAPI.getAll().catch(() => []),
+          pactsAPI.getAnalytics().catch(() => ({ totalPacts: 0, completedPacts: 0, streaks: 0 })),
+          pactsAPI.getHistory().catch(() => []),
+          activityAPI.getStreak().catch(() => ({ streak: 0 }))
+        ]);
+        
+        setPacts(pactsData);
+        setRecentPacts(history.slice(0, 5)); // Show last 5 pacts
+        
+        // Set active pact if any
+        const active = pactsData.find(pact => pact.status === 'active' || pact.status === 'scheduled');
+        if (active) {
+          setActivePact(active);
+        }
+        
+        // Update stats
+        setPactsStats({
+          streak: streak.streak || 0,
+          totalPacts: analytics.totalPacts || pactsData.length,
+          completedPacts: analytics.completedPacts || 0,
+          studyPartners: new Set(pactsData.flatMap(p => p.participants?.map(participant => 
+            typeof participant === 'string' ? participant : participant.email
+          ) || [])).size
+        });
+        
+      } catch (error) {
+        console.error('Error fetching pacts data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPactsData();
+  }, []);
+
+  const handleSharePact = async (pactId) => {
+    const email = emailInputs[pactId];
+    if (!email) {
+      alert('Please enter an email address');
+      return;
     }
 
-    // Mock active pact
-    setActivePact({
-      id: 1,
-      subject: 'JAMB Mathematics',
-      date: new Date().toISOString().split('T')[0],
-      time: '14:00',
-      duration: 45,
-      friends: [
-        { name: 'Chidi Okafor', status: 'confirmed' },
-        { name: 'Amaka Nwankwo', status: 'confirmed' }
-      ]
-    });
-  }, []);
+    setSharingPact(pactId);
+    try {
+      await pactsAPI.share(pactId, email);
+      setNotificationData({ type: 'shared', email });
+      setShowNotification(true);
+      setEmailInputs(prev => ({ ...prev, [pactId]: '' }));
+      setShowEmailInput(prev => ({ ...prev, [pactId]: false }));
+      setTimeout(() => setShowNotification(false), 3000);
+    } catch (error) {
+      console.error('Error sharing pact:', error);
+      alert('Failed to send invitation. Please try again.');
+    } finally {
+      setSharingPact(null);
+    }
+  };
 
   if (currentView === 'create') {
     return (
@@ -46,9 +100,25 @@ const StudyPactsPage = () => {
           ← Back to Study Pacts
         </button>
         <StudyPactCreation
-          onPactCreated={(pact) => {
-            setPacts([pact, ...pacts]);
-            setCurrentView('overview');
+          onPactCreated={async (pact) => {
+            try {
+              // Transform pact data to match backend requirements
+              const pactData = {
+                title: pact.subject || `${pact.subject} Study Session`,
+                subject: pact.subject,
+                duration: parseInt(pact.duration),
+                scheduledTime: pact.date && pact.time ? `${pact.date}T${pact.time}:00Z` : new Date(Date.now() + 3600000).toISOString(),
+                description: 'Study session created via Classence',
+                difficulty: 'Medium'
+              };
+              
+              const newPact = await pactsAPI.create(pactData);
+              setPacts([newPact, ...pacts]);
+              setCurrentView('overview');
+            } catch (error) {
+              console.error('Error creating pact:', error);
+              alert('Failed to create pact. Please try again.');
+            }
           }}
         />
       </div>
@@ -84,7 +154,7 @@ const StudyPactsPage = () => {
               <Flame className="w-5 h-5 text-orange-600" />
             </div>
             <div>
-              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>7</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pactsStats.streak}</div>
               <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Day Streak</div>
             </div>
           </div>
@@ -96,7 +166,7 @@ const StudyPactsPage = () => {
               <Users className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pacts.length}</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pactsStats.totalPacts}</div>
               <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total Pacts</div>
             </div>
           </div>
@@ -108,7 +178,7 @@ const StudyPactsPage = () => {
               <Calendar className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>15</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pactsStats.completedPacts}</div>
               <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Completed</div>
             </div>
           </div>
@@ -120,7 +190,7 @@ const StudyPactsPage = () => {
               <Users className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>5</div>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pactsStats.studyPartners}</div>
               <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Study Partners</div>
             </div>
           </div>
@@ -131,45 +201,66 @@ const StudyPactsPage = () => {
       <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6 mb-6`}>
         <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Active Pacts</h2>
         {activePact ? (
-          <div className="border border-green-200 bg-green-50 rounded-lg p-4">
+          <div className={`border rounded-lg p-4 ${isDarkMode ? 'border-green-600 bg-green-900/20' : 'border-green-200 bg-green-50'}`}>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-green-800">{activePact.subject}</h3>
-              <span className="bg-green-200 text-green-800 px-2 py-1 rounded text-sm">Active</span>
+              <h3 className={`font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-800'}`}>{activePact.title || activePact.subject}</h3>
+              <span className={`px-2 py-1 rounded text-sm ${isDarkMode ? 'bg-green-800 text-green-200' : 'bg-green-200 text-green-800'}`}>
+                {activePact.status === 'active' ? 'Active' : 'Scheduled'}
+              </span>
             </div>
-            <p className="text-green-700 text-sm mb-2">
-              Today at {activePact.time} • {activePact.duration} minutes
+            <p className={`text-sm mb-2 ${isDarkMode ? 'text-green-300' : 'text-green-700'}`}>
+              {activePact.scheduledTime ? new Date(activePact.scheduledTime).toLocaleString() : 'Time TBD'} • {activePact.duration} minutes
             </p>
-            <p className="text-green-600 text-sm">
-              With: {activePact.friends.map(f => f.name).join(', ')}
-            </p>
+            {activePact.participants && activePact.participants.length > 0 && (
+              <p className={`text-sm ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+                With: {activePact.participants.slice(0, 3).map(p => 
+                  typeof p === 'string' ? p.split('@')[0] : p.fullName || p.name || 'User'
+                ).join(', ')}
+                {activePact.participants.length > 3 && ` +${activePact.participants.length - 3} more`}
+              </p>
+            )}
           </div>
         ) : (
-          <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>No active pacts. Create one to get started!</p>
+          <div className="text-center py-8">
+            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>No active pacts</p>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Create your first study pact to get started!</p>
+          </div>
         )}
       </div>
 
       {/* Recent Pacts */}
       <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
         <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Recent Pacts</h2>
-        <div className="space-y-3">
-          {[
-            { subject: 'JAMB Physics', date: 'Yesterday', status: 'completed', participants: ['Chidi', 'Kemi'] },
-            { subject: 'WAEC Chemistry', date: '2 days ago', status: 'completed', participants: ['Amaka', 'Tunde'] },
-            { subject: 'JAMB English', date: '3 days ago', status: 'broken', participants: ['Chidi'] }
-          ].map((pact, index) => (
-            <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${isDarkMode ? 'border border-gray-600' : 'border border-gray-200'}`}>
-              <div>
-                <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pact.subject}</h4>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{pact.date} • With: {pact.participants.join(', ')}</p>
+        {recentPacts.length > 0 ? (
+          <div className="space-y-3">
+            {recentPacts.map((pact) => (
+              <div key={pact.id} className={`p-3 rounded-lg ${isDarkMode ? 'border border-gray-600' : 'border border-gray-200'}`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{pact.title || pact.subject}</h4>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {pact.completedAt ? new Date(pact.completedAt).toLocaleDateString() : 'Recently'}
+                      {pact.participants && ` • With: ${pact.participants.slice(0, 2).map(p => 
+                        typeof p === 'string' ? p.split('@')[0] : p.fullName || p.name || 'User'
+                      ).join(', ')}`}
+                    </p>
+                  </div>
+                  <span className={`px-2 py-1 rounded text-sm ${
+                    pact.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                  }`}>
+                    {pact.status}
+                  </span>
+                </div>
               </div>
-              <span className={`px-2 py-1 rounded text-sm ${
-                pact.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                {pact.status}
-              </span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>No recent pacts</p>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Complete study pacts to see your history here</p>
+          </div>
+        )}
       </div>
 
       {/* Study Requests */}
@@ -274,22 +365,9 @@ const StudyPactsPage = () => {
           <Flame className="w-5 h-5 mr-2 text-orange-500" />
           Live Activity
         </h2>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-            <span className="text-green-800">Chidi completed JAMB Math pact - 15th streak! 🔥</span>
-            <span className="text-xs text-green-600 ml-auto">2 mins ago</span>
-          </div>
-          <div className="flex items-center space-x-3 p-3 bg-red-50 rounded-lg">
-            <AlertTriangle className="w-5 h-5 text-red-600" />
-            <span className="text-red-800">Tunde broke WAEC Chemistry pact 😞</span>
-            <span className="text-xs text-red-600 ml-auto">5 mins ago</span>
-          </div>
-          <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-            <Clock className="w-5 h-5 text-blue-600" />
-            <span className="text-blue-800">Amaka started JAMB Physics pact (3/4 participants ready)</span>
-            <span className="text-xs text-blue-600 ml-auto">8 mins ago</span>
-          </div>
+        <div className="text-center py-8">
+          <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>No live activity</p>
+          <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Join or create pacts to see live updates</p>
         </div>
       </div>
 
@@ -314,6 +392,11 @@ const StudyPactsPage = () => {
               {notificationData.type === 'broken' && (
                 <p className="text-sm text-gray-800">
                   Pact broken. All participants have been notified. Your streak has been reset.
+                </p>
+              )}
+              {notificationData.type === 'shared' && (
+                <p className="text-sm text-gray-800">
+                  Study pact invitation sent to {notificationData.email} successfully!
                 </p>
               )}
             </div>

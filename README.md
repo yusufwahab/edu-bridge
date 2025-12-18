@@ -54,6 +54,177 @@ Our platform leverages cutting-edge AI technologies to create a personalized lea
 - **Performance Forecasting**: Predicts student success probability and identifies areas needing improvement
 - **Personalized Recommendations**: Suggests optimal study schedules and resource allocation
 
+## Backend Integration
+
+### Base URL
+**Production**: `https://edubridge-backend-thgw.onrender.com`  
+**Development**: `http://localhost:5000`
+
+### API Endpoints
+
+#### Authentication Endpoints
+
+**Register User**
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "agreeTerms": true
+}
+```
+*Response: Automatically sends OTP to email*
+
+**Login User**
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Get User Profile**
+```http
+GET /api/user/me
+Authorization: Bearer <token>
+```
+
+#### Email Verification Endpoints
+
+**Send OTP**
+```http
+POST /api/verification/send-otp
+Content-Type: application/json
+
+{
+  "email": "user@example.com"
+}
+```
+
+**Verify OTP**
+```http
+POST /api/verification/verify-otp
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "otp": "123456"
+}
+```
+
+#### Study Pacts Endpoints
+
+**Get All Pacts**
+```http
+GET /api/pacts
+Authorization: Bearer <token>
+```
+
+**Create Pact**
+```http
+POST /api/pacts
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "title": "Mathematics Study Session",
+  "subject": "Mathematics",
+  "duration": 60,
+  "scheduledTime": "2024-01-15T18:00:00Z",
+  "description": "JAMB Mathematics preparation",
+  "difficulty": "Medium"
+}
+```
+
+**Share Pact**
+```http
+POST /api/pacts/{id}/share
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "email": "friend@example.com"
+}
+```
+
+#### Notifications Endpoints
+
+**Update Notification Settings**
+```http
+PUT /api/notifications/settings
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "studyReminders": true,
+  "emailAlerts": true,
+  "smsAlerts": false,
+  "whatsappAlerts": true
+}
+```
+
+**Update Contact Information**
+```http
+PUT /api/notifications/contact
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "phoneNumber": "+2348012345678",
+  "whatsappNumber": "+2348012345678"
+}
+```
+
+#### Settings Endpoints
+
+**Update Profile**
+```http
+PUT /api/settings/profile
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "displayName": "John Doe",
+  "school": "University of Lagos"
+}
+```
+
+**Update Class Information**
+```http
+PUT /api/settings/class
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "gradeLevel": "SS 3",
+  "examTarget": "JAMB",
+  "subjects": ["Mathematics", "Physics", "Chemistry", "English Language"]
+}
+```
+
+### Frontend Integration
+
+The frontend uses a centralized API utility (`src/utils/api.js`) that handles:
+- **Authentication headers** with JWT tokens
+- **Error handling** and response parsing
+- **Base URL configuration** via environment variables
+- **Consistent request formatting**
+
+#### Key Integration Features:
+
+1. **Automatic OTP Flow**: Registration → OTP sent → Verification → Login
+2. **Real-time Notifications**: SMS, Email, and WhatsApp alerts
+3. **Study Pacts Sharing**: Email invitations with backend integration
+4. **Profile Synchronization**: Dynamic user data across components
+5. **Settings Persistence**: All preferences saved to backend
+
 ## Installation/Run Instructions
 
 ### Prerequisites
@@ -81,6 +252,7 @@ Our platform leverages cutting-edge AI technologies to create a personalized lea
    ```env
    VITE_GROQ_API_KEY=your_groq_api_key_here
    VITE_YARNGPT_API_KEY=your_yarngpt_api_key_here
+   VITE_API_BASE_URL=https://edubridge-backend-thgw.onrender.com
    ```
 
 4. Start the development server:

@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import YabvilPrepLogo from './Yabvilprep-logo.png'
+import { useNavigate, useLocation } from "react-router-dom";
+import { authAPI } from './utils/api';
+import { useTheme } from './contexts/ThemeContext';
 
 export default function Login({setUser}) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isDarkMode } = useTheme();
+  const successMessage = location.state?.message;
   const [formData, setFormData] = useState({
-    email: "",
-    password: ""
+    email: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -51,7 +54,6 @@ export default function Login({setUser}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const BASE_URL = 'https://edubridge-backend-thgw.onrender.com';
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -62,29 +64,37 @@ export default function Login({setUser}) {
     setErrors({});
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/user/login`, formData);
-      localStorage.setItem('token', res.data.token);
-      console.log('Authentication successful:', res.data);
-      setUser(res.data.user);
+      const response = await authAPI.login(formData);
+      localStorage.setItem('token', response.token);
+      console.log('Authentication successful:', response);
+      setUser(response.user);
+      
+      // Check if email is verified
+      if (!response.user.isEmailVerified) {
+        setErrors({ submit: 'Please verify your email before logging in. Check your inbox for the verification code.' });
+        return;
+      }
       
       // Check if user has completed onboarding
-      const onboardingData = localStorage.getItem('onboardingData');
-      if (!onboardingData || !JSON.parse(onboardingData).onboardingCompleted) {
+      if (!response.user.isOnboarded) {
         navigate('/onboarding/welcome');
       } else {
         navigate('/dashboard');
       }
     } catch (err) {
       console.error('Authentication error:', err);
-      alert(err.response?.data?.message || 'An error occurred. Please try again.');
+      setErrors({ submit: err.message || 'An error occurred. Please try again.' });
     } finally {
       setLoading(false);
     }
-    
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-100 to-indigo-100 flex items-center justify-center p-4">
+    <div className={`min-h-screen flex items-center justify-center p-4 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900' 
+        : 'bg-gradient-to-br from-gray-100 via-blue-100 to-indigo-100'
+    }`}>
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8 grid place-items-center">
@@ -94,20 +104,31 @@ export default function Login({setUser}) {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
             Classence CBT
           </h1>
-          <p className="text-gray-600 mt-2">Nigerian Educational Testing Platform</p>
+          <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Nigerian Educational Testing Platform</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className={`rounded-2xl shadow-xl p-8 border ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-100'
+        }`}>
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Welcome Back</h2>
-            <p className="text-gray-600 mt-1">Sign in to your account</p>
+            <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Sign in to your account</p>
           </div>
+
+          {/* Success Message */}
+          {successMessage && (
+            <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-600 text-sm text-center">{successMessage}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Email Address
               </label>
               <input
@@ -116,7 +137,7 @@ export default function Login({setUser}) {
                 value={formData.email}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 ${
-                  errors.email ? "border-red-500 bg-red-50" : "border-gray-300"
+                  errors.email ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300"
                 }`}
                 placeholder="Enter your email"
               />
@@ -127,7 +148,7 @@ export default function Login({setUser}) {
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Password
               </label>
               <div className="relative">
@@ -137,7 +158,7 @@ export default function Login({setUser}) {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 pr-12 ${
-                    errors.password ? "border-red-500 bg-red-50" : "border-gray-300"
+                    errors.password ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
@@ -182,7 +203,7 @@ export default function Login({setUser}) {
           {/* Footer Links */}
           <div className="mt-6 text-center space-y-3">
             <div className="space-y-2">
-              <p className="text-sm text-gray-600">
+              <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 Don't have an account?{" "}
                 <button
                   onClick={() => navigate("/signup")}
@@ -202,8 +223,8 @@ export default function Login({setUser}) {
 
         {/* Features Preview */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600 mb-4">🇳🇬 Built for Nigerian Students</p>
-          <div className="flex justify-center space-x-6 text-xs text-gray-500">
+          <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>🇳🇬 Built for Nigerian Students</p>
+          <div className={`flex justify-center space-x-6 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             <div className="flex items-center gap-1">
               <span>✅</span> WAEC Standard
             </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, Flame, AlertTriangle, Plus, X, Check, Share2, MessageCircle, Mail } from 'lucide-react';
+import { pactsAPI } from '../utils/api';
+import { Calendar, Clock, Users, Flame, AlertTriangle, Plus, X, Check, Share2, MessageCircle, Mail, Send } from 'lucide-react';
 
 const StudyPactCreation = ({ onPactCreated }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,9 @@ const StudyPactCreation = ({ onPactCreated }) => {
   const [friendInput, setFriendInput] = useState('');
   const [currentStreak, setCurrentStreak] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
+  const [showEmailInput, setShowEmailInput] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   const subjects = [
     'JAMB Mathematics', 'JAMB Physics', 'JAMB Chemistry', 'JAMB Biology',
@@ -63,6 +67,68 @@ const StudyPactCreation = ({ onPactCreated }) => {
     localStorage.setItem('studyPacts', JSON.stringify([pact, ...existingPacts]));
     
     onPactCreated && onPactCreated(pact);
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailInput.trim()) {
+      alert('Please enter an email address');
+      return;
+    }
+
+    setSendingEmail(true);
+    try {
+      // Create a temporary pact object for sharing
+      const pactData = {
+        subject: formData.subject || 'Study Session',
+        date: formData.date,
+        time: formData.time,
+        duration: formData.duration
+      };
+      
+      // Validate required fields
+      if (!formData.subject || !formData.duration) {
+        alert('Please select a subject and duration first');
+        return;
+      }
+
+      // Create proper scheduledTime or use current time + 1 hour as default
+      let scheduledTime;
+      if (formData.date && formData.time) {
+        scheduledTime = `${formData.date}T${formData.time}:00Z`;
+      } else {
+        const defaultTime = new Date();
+        defaultTime.setHours(defaultTime.getHours() + 1);
+        scheduledTime = defaultTime.toISOString();
+      }
+
+      // Create pact payload with required fields and defaults
+      const pact = {
+        title: `${formData.subject} Study Session`,
+        subject: formData.subject,
+        duration: parseInt(formData.duration),
+        scheduledTime,
+        description: 'Study session created via Classence',
+        difficulty: 'Medium',
+        inviteEmails: [emailInput]
+      };
+      
+      console.log('Creating pact with payload:', pact);
+      const response = await pactsAPI.create(pact);
+      console.log('Pact creation response:', response);
+
+      if (response) {
+        alert(`Study pact created successfully! Invitation email sent to ${emailInput}. Please check your spam folder if not received within 5 minutes.`);
+        setEmailInput('');
+        setShowEmailInput(false);
+      } else {
+        throw new Error('Failed to create pact and send invitation');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send invitation. Please try again.');
+    } finally {
+      setSendingEmail(false);
+    }
   };
 
   const getTimeUntilSession = () => {
@@ -308,11 +374,7 @@ const StudyPactCreation = ({ onPactCreated }) => {
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => {
-                      const message = `Join my study pact! 📚\n\nSubject: ${formData.subject || 'TBD'}\nDate: ${formData.date ? new Date(formData.date).toLocaleDateString() : 'TBD'}\nTime: ${formData.time || 'TBD'}\nDuration: ${formData.duration} minutes\n\nLet's study together and stay accountable! 💪`;
-                      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-                      window.open(whatsappUrl, '_blank');
-                    }}
+                    onClick={() => window.open('https://chat.whatsapp.com/Eyv9xvEm81X7PG9FxL5Bz4', '_blank')}
                     className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                   >
                     <MessageCircle className="w-4 h-4" />
@@ -320,12 +382,7 @@ const StudyPactCreation = ({ onPactCreated }) => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      const subject = 'Join My Study Pact!';
-                      const body = `Hi there!\n\nI'm creating a study pact and would love for you to join me:\n\nSubject: ${formData.subject || 'TBD'}\nDate: ${formData.date ? new Date(formData.date).toLocaleDateString() : 'TBD'}\nTime: ${formData.time || 'TBD'}\nDuration: ${formData.duration} minutes\n\nStudying together helps us stay accountable and motivated. Let me know if you're interested!\n\nBest regards`;
-                      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                      window.location.href = mailtoUrl;
-                    }}
+                    onClick={() => setShowEmailInput(!showEmailInput)}
                     className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                   >
                     <Mail className="w-4 h-4" />
@@ -335,6 +392,36 @@ const StudyPactCreation = ({ onPactCreated }) => {
                 <p className="text-xs text-gray-600 mt-2">
                   Share your study pact details with friends to invite them
                 </p>
+                
+                {showEmailInput && (
+                  <div className="mt-4 p-4 bg-white rounded-lg border border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Enter Buddy's Email
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="email"
+                        placeholder="friend@example.com"
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSendEmail}
+                        disabled={sendingEmail || !emailInput.trim()}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-1 text-sm"
+                      >
+                        {sendingEmail ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                        <span className="hidden sm:inline">Share</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Friend List */}

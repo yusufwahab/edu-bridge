@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import { Moon, Sun, User, Bell, Shield, Globe, Palette, Volume2, Eye, GraduationCap } from 'lucide-react';
+import { authAPI } from '../utils/api';
+import { Moon, Sun, User, Bell, Shield, Globe, Palette, Volume2, Eye, GraduationCap, MessageSquare, Mail, Phone } from 'lucide-react';
 
 const SettingsPage = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const [profileData, setProfileData] = useState({
+    displayName: '',
+    email: '',
+    school: ''
+  });
   const [settings, setSettings] = useState({
     notifications: {
       studyReminders: true,
       pactUpdates: true,
       achievements: true,
-      weeklyReports: false
+      weeklyReports: false,
+      smsAlerts: false,
+      emailAlerts: true,
+      whatsappAlerts: false
     },
     privacy: {
       profileVisibility: 'friends',
@@ -32,6 +41,25 @@ const SettingsPage = () => {
   });
 
   const [isEditingClass, setIsEditingClass] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await authAPI.getProfile();
+        setProfileData({
+          displayName: response.fullName || '',
+          email: response.email || '',
+          school: response.school || ''
+        });
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const gradeOptions = [
     'Primary 1', 'Primary 2', 'Primary 3', 'Primary 4', 'Primary 5', 'Primary 6',
@@ -185,7 +213,8 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="text"
-                  defaultValue="Adebayo Johnson"
+                  value={profileData.displayName}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, displayName: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -195,7 +224,8 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="email"
-                  defaultValue="adebayo@example.com"
+                  value={profileData.email}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -206,7 +236,8 @@ const SettingsPage = () => {
               </label>
               <input
                 type="text"
-                defaultValue="Lagos State University"
+                value={profileData.school}
+                onChange={(e) => setProfileData(prev => ({ ...prev, school: e.target.value }))}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -242,6 +273,58 @@ const SettingsPage = () => {
                 />
               </div>
             ))}
+            
+            <div className="border-t border-gray-200 dark:border-gray-600 pt-4 mt-6">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Alert Methods</h3>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <Mail className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">Email Alerts</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Receive notifications via email
+                    </p>
+                  </div>
+                </div>
+                <ToggleSwitch
+                  enabled={settings.notifications.emailAlerts}
+                  onChange={(value) => updateSetting('notifications', 'emailAlerts', value)}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <Phone className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">SMS Alerts</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Receive notifications via text message
+                    </p>
+                  </div>
+                </div>
+                <ToggleSwitch
+                  enabled={settings.notifications.smsAlerts}
+                  onChange={(value) => updateSetting('notifications', 'smsAlerts', value)}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <MessageSquare className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">WhatsApp Alerts</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Receive notifications via WhatsApp
+                    </p>
+                  </div>
+                </div>
+                <ToggleSwitch
+                  enabled={settings.notifications.whatsappAlerts}
+                  onChange={(value) => updateSetting('notifications', 'whatsappAlerts', value)}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -432,7 +515,7 @@ const SettingsPage = () => {
                         <input
                           type="checkbox"
                           checked={classData.subjects.includes(subject)}
-                          onChange={() => handleSubjectToggle(subject)}
+                          onChange={(e) => handleSubjectToggle(subject)}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-sm text-gray-700 dark:text-gray-300">{subject}</span>

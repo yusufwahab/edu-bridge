@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onboardingAPI } from '../utils/api';
 
 const OnboardingWelcome = () => {
   const navigate = useNavigate();
@@ -10,7 +11,8 @@ const OnboardingWelcome = () => {
     examDate: '',
     subjects: [],
     phoneNumber: '',
-    stateOfOrigin: ''
+    stateOfOrigin: '',
+    school: ''
   });
 
   const gradeOptions = [
@@ -73,8 +75,21 @@ const OnboardingWelcome = () => {
     navigate('/onboarding/learning-style');
   };
 
-  const handleSkip = () => {
-    navigate('/dashboard');
+  const handleSkip = async () => {
+    try {
+      // Save minimal onboarding data
+      await onboardingAPI.complete({
+        gradeLevel: 'SS 3',
+        examTarget: 'JAMB',
+        subjects: ['Mathematics', 'English Language', 'Physics', 'Chemistry'],
+        phoneNumber: '',
+        stateOfOrigin: 'Lagos'
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error skipping onboarding:', error);
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -105,7 +120,7 @@ const OnboardingWelcome = () => {
         {/* Welcome Header */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-4">🎓</div>
-          <h1 className="text-4xl font-bold text-white mb-4">Welcome to YabvilPrep!</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Welcome to Classence!</h1>
           <p className="text-gray-300 text-lg">Let's set up your personalized learning journey</p>
         </div>
 
@@ -214,6 +229,17 @@ const OnboardingWelcome = () => {
                 ))}
               </select>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">School Name</label>
+            <input
+              type="text"
+              value={formData.school}
+              onChange={(e) => setFormData(prev => ({ ...prev, school: e.target.value }))}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-white/20 rounded-xl text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+              placeholder="Enter your school name"
+            />
           </div>
         </div>
 

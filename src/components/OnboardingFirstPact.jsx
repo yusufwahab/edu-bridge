@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { onboardingAPI } from '../utils/api';
 import { Clock, Users, Calendar, Sparkles, ArrowRight, Target, Zap, Trophy } from 'lucide-react';
 
 const OnboardingFirstPact = () => {
@@ -26,45 +27,59 @@ const OnboardingFirstPact = () => {
   const handleCreatePact = async () => {
     setIsCreating(true);
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
+      
+      // Save onboarding data to backend
+      await onboardingAPI.complete(onboardingData);
+      
+      const now = new Date();
+      const suggestedTime = now.getHours() < 16 ? '16:00' : '20:00';
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const suggestedDate = tomorrow.toISOString().split('T')[0];
 
-    const now = new Date();
-    const suggestedTime = now.getHours() < 16 ? '16:00' : '20:00';
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const suggestedDate = tomorrow.toISOString().split('T')[0];
+      const finalPactData = {
+        ...pactData,
+        scheduledTime: pactData.scheduledTime || `${suggestedDate}T${suggestedTime}`,
+        subject: pactData.subject || 'Mathematics',
+        createdAt: new Date().toISOString(),
+        status: 'scheduled',
+        participants: pactData.inviteFriends ? pactData.friendEmails.filter(email => email) : []
+      };
 
-    const finalPactData = {
-      ...pactData,
-      scheduledTime: pactData.scheduledTime || `${suggestedDate}T${suggestedTime}`,
-      subject: pactData.subject || 'Mathematics',
-      createdAt: new Date().toISOString(),
-      status: 'scheduled',
-      participants: pactData.inviteFriends ? pactData.friendEmails.filter(email => email) : []
-    };
+      const existingPacts = JSON.parse(localStorage.getItem('studyPacts') || '[]');
+      localStorage.setItem('studyPacts', JSON.stringify([...existingPacts, finalPactData]));
 
-    const existingPacts = JSON.parse(localStorage.getItem('studyPacts') || '[]');
-    localStorage.setItem('studyPacts', JSON.stringify([...existingPacts, finalPactData]));
-
-    const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
-    localStorage.setItem('onboardingData', JSON.stringify({
-      ...onboardingData,
-      firstPact: finalPactData,
-      onboardingCompleted: true,
-      completedAt: new Date().toISOString()
-    }));
+      localStorage.setItem('onboardingData', JSON.stringify({
+        ...onboardingData,
+        firstPact: finalPactData,
+        onboardingCompleted: true,
+        completedAt: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Failed to save onboarding data:', error);
+    }
 
     setIsCreating(false);
     navigate('/dashboard?welcome=true');
   };
 
-  const handleSkip = () => {
-    const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
-    localStorage.setItem('onboardingData', JSON.stringify({
-      ...onboardingData,
-      onboardingCompleted: true,
-      completedAt: new Date().toISOString()
-    }));
+  const handleSkip = async () => {
+    try {
+      const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
+      
+      // Save onboarding data to backend
+      await onboardingAPI.complete(onboardingData);
+      
+      localStorage.setItem('onboardingData', JSON.stringify({
+        ...onboardingData,
+        onboardingCompleted: true,
+        completedAt: new Date().toISOString()
+      }));
+    } catch (error) {
+      console.error('Failed to save onboarding data:', error);
+    }
     navigate('/dashboard');
   };
 

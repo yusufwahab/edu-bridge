@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { authAPI } from '../utils/api';
 import { Menu, Bell, Search, User } from 'lucide-react';
 
 const Navbar = ({ onMenuClick }) => {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
+  const [user, setUser] = useState({ fullName: '', gradeLevel: '' });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await authAPI.getProfile();
+        setUser({
+          fullName: userData.fullName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'User',
+          gradeLevel: userData.gradeLevel || 'Student'
+        });
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <nav className={`${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow-sm border-b px-6 py-4`}>
@@ -19,7 +38,7 @@ const Navbar = ({ onMenuClick }) => {
           
           <div className="hidden md:block">
             <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Dashboard</h2>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Welcome back, Amaka!</p>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Welcome back, {user.fullName.split(' ')[0] || 'User'}!</p>
           </div>
         </div>
 
@@ -41,20 +60,26 @@ const Navbar = ({ onMenuClick }) => {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <button className={`relative p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}>
+          <button 
+            onClick={() => navigate('/notifications')}
+            className={`relative p-2 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+          >
             <Bell className={`w-5 h-5 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
           </button>
           
-          <div className="flex items-center gap-2 ml-2">
+          <button 
+            onClick={() => navigate('/profile')}
+            className="flex items-center gap-2 ml-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
             <div className="w-8 h-8 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-full flex items-center justify-center text-white font-bold text-sm">
-              A
+              {user.fullName.charAt(0).toUpperCase() || 'U'}
             </div>
             <div className="hidden sm:block">
-              <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Amaka</p>
-              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>SS3 Student</p>
+              <p className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{user.fullName.split(' ')[0] || 'User'}</p>
+              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{user.gradeLevel} Student</p>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </nav>

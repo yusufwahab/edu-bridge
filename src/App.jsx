@@ -20,28 +20,26 @@ import OnboardingCareerAssessment from "./components/OnboardingCareerAssessment"
 import OnboardingFirstPact from "./components/OnboardingFirstPact";
 import LearningPage from "./components/LearningPage";
 import SettingsPage from "./components/SettingsPage";
+import ProfilePage from "./components/ProfilePage";
+import NotificationsPage from "./components/NotificationsPage";
+import VerifyOTP from "./components/VerifyOTP";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { authAPI } from './utils/api';
 
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const BASE_URL = 'https://edubridge-backend-thgw.onrender.com';
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get(`${BASE_URL}/api/user/me`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          setUser(response.data);
+          const userData = await authAPI.getProfile();
+          setUser(userData);
         } catch (err) {
           setError('Failed to fetch user data');
           localStorage.removeItem('token');
@@ -60,6 +58,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/signup" element={<Signup setUser={setUser} />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
         
         {/* Onboarding Flow */}
         <Route path="/onboarding/welcome" element={<OnboardingWelcome />} />
@@ -81,6 +80,8 @@ export default function App() {
         <Route path="/study-recipes" element={<Layout><StudyRecipePage /></Layout>} />
         <Route path="/peer-teach" element={<Layout><PeerTeachPage /></Layout>} />
         <Route path="/activity-feed" element={<Layout><ActivityFeedPage /></Layout>} />
+        <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
+        <Route path="/notifications" element={<Layout><NotificationsPage /></Layout>} />
         <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
         </Routes>
       </BrowserRouter>

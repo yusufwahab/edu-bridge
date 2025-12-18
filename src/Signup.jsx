@@ -1,23 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import YabvilPrepLogo from './Yabvilprep-logo.png'
+import { authAPI, verificationAPI } from './utils/api';
+import { useTheme } from './contexts/ThemeContext';
 
 export default function Signup({setUser}) {
-
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
     agreeTerms: false
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [message, setMessage] = useState('');
 
 //   const subjects = [
 //     "Mathematics", "Physics", "Chemistry", "Biology", 
@@ -66,8 +69,8 @@ export default function Signup({setUser}) {
       newErrors.confirmPassword = "Passwords do not match";
     }
     
-    if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = "You must agree to the terms and conditions";
+    if (!formData.agreeTerms) {
+      newErrors.agreeTerms = "You must agree to the terms and conditions";
     }
 
     if (!formData.email.trim()) {
@@ -87,8 +90,6 @@ export default function Signup({setUser}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const BASE_URL = 'https://edubridge-backend-thgw.onrender.com';
 
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -100,24 +101,103 @@ export default function Signup({setUser}) {
     setErrors({});
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/user/register`, formData);
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('darkMode', 'true');
-      console.log('Registration successful:', res.data);
-      setUser(res.data.user);
+      const userData = {
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        agreeTerms: formData.agreeTerms
+      };
       
-      // New users always go to onboarding
-      navigate('/onboarding/welcome');
+      console.log('Sending userData:', userData);
+      const response = await authAPI.register(userData);
+      console.log('Registration successful:', response);
+      
+      // Show OTP verification screen
+      setShowOTPVerification(true);
+      setUserEmail(formData.email);
+      setMessage(response.message || 'Registration successful! Please check your email for verification OTP.');
     } catch (err) {
       console.error('Authentication error:', err);
-      alert(err.response?.data?.message || 'Registration failed.');
+      setErrors({ submit: err.message || 'Registration failed.' });
     } finally {
       setLoading(false);
     }
   };
 
+  const OTPVerification = ({ email, onVerified }) => {
+    const [otp, setOtp] = useState('');
+    const [otpLoading, setOtpLoading] = useState(false);
+    const [otpError, setOtpError] = useState('');
+
+    const verifyOTP = async () => {
+      setOtpLoading(true);
+      setOtpError('');
+      try {
+        await verificationAPI.verifyOTP(email, otp);
+        onVerified();
+      } catch (error) {
+        setOtpError(error.message || 'Verification failed');
+      }
+      setOtpLoading(false);
+    };
+
+    const resendOTP = async () => {
+      try {
+        await verificationAPI.sendOTP(email);
+        setMessage('New OTP sent to your email');
+      } catch (error) {
+        setOtpError('Failed to resend OTP');
+      }
+    };
+
+    return (
+      <div className="text-center">
+        <div className="text-6xl mb-4">📧</div>
+        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">Verify Your Email</h2>
+        <p className={`mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Enter the 6-digit code sent to {email}</p>
+        
+        <div className="space-y-4">
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            className="w-full px-4 py-3 border rounded-lg text-center text-2xl font-bold tracking-widest focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            placeholder="000000"
+            maxLength="6"
+          />
+          
+          {otpError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-red-600 text-sm">{otpError}</p>
+            </div>
+          )}
+          
+          <button
+            onClick={verifyOTP}
+            disabled={otpLoading || otp.length !== 6}
+            className="w-full bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white font-semibold py-3 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {otpLoading ? 'Verifying...' : 'Verify Email'}
+          </button>
+          
+          <button
+            onClick={resendOTP}
+            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
+          >
+            Resend OTP
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-100 to-indigo-100 flex items-center justify-center p-4">
+    <div className={`min-h-screen flex items-center justify-center p-4 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900' 
+        : 'bg-gradient-to-br from-gray-100 via-blue-100 to-indigo-100'
+    }`}>
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8 grid place-items-center">
@@ -127,15 +207,36 @@ export default function Signup({setUser}) {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
             Classence CBT
           </h1>
-          <p className="text-gray-600 mt-2">Nigerian Educational Testing Platform</p>
+          <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Nigerian Educational Testing Platform</p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Create Account</h2>
-            <p className="text-gray-600 mt-1">Join thousands of Nigerian students</p>
-          </div>
+        <div className={`rounded-2xl shadow-xl p-8 border ${
+          isDarkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-100'
+        }`}>
+          {/* Success Message */}
+          {message && (
+            <div className="mb-6 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-600 text-sm text-center">{message}</p>
+            </div>
+          )}
+
+          {showOTPVerification ? (
+            <OTPVerification 
+              email={userEmail}
+              onVerified={() => {
+                setShowOTPVerification(false);
+                navigate('/login', { state: { message: 'Email verified successfully! Please login to continue.' } });
+              }}
+            />
+          ) : (
+            <>
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Create Account</h2>
+                <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Join thousands of Nigerian students</p>
+              </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
@@ -318,8 +419,8 @@ export default function Signup({setUser}) {
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  name="agreeToTerms"
-                  checked={formData.agreeToTerms}
+                  name="agreeTerms"
+                  checked={formData.agreeTerms}
                   onChange={handleInputChange}
                   className="mt-1 text-indigo-600 focus:ring-indigo-500 rounded"
                 />
@@ -334,8 +435,8 @@ export default function Signup({setUser}) {
                   </a>
                 </span>
               </label>
-              {errors.agreeToTerms && (
-                <p className="text-red-500 text-xs mt-1 animate-pulse">{errors.agreeToTerms}</p>
+              {errors.agreeTerms && (
+                <p className="text-red-500 text-xs mt-1 animate-pulse">{errors.agreeTerms}</p>
               )}
             </div>
 
@@ -366,7 +467,7 @@ export default function Signup({setUser}) {
 
           {/* Footer Links */}
           <div className="mt-6 text-center space-y-3">
-            <p className="text-sm text-gray-600">
+            <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Already have an account?{" "}
               <button
                 onClick={() => navigate("/login")}
@@ -376,12 +477,14 @@ export default function Signup({setUser}) {
               </button>
             </p>
           </div>
+            </>
+          )}
         </div>
 
         {/* Features Preview */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600 mb-4">🇳🇬 Built for Nigerian Students</p>
-          <div className="flex justify-center space-x-6 text-xs text-gray-500">
+          <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>🇳🇬 Built for Nigerian Students</p>
+          <div className={`flex justify-center space-x-6 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             <div className="flex items-center gap-1">
               <span>✅</span> WAEC Standard
             </div>

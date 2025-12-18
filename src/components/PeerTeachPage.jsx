@@ -276,11 +276,14 @@ const PeerTeachPage = () => {
               </div>
 
               <div className="flex space-x-3">
-                <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+                <button
+                  onClick={() => window.open('https://chat.whatsapp.com/Eyv9xvEm81X7PG9FxL5Bz4', '_blank')}
+                  className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+                >
                   Join Group
                 </button>
                 <button
-                  onClick={() => window.open(group.whatsappLink, '_blank')}
+                  onClick={() => window.open('https://chat.whatsapp.com/Eyv9xvEm81X7PG9FxL5Bz4', '_blank')}
                   className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition"
                 >
                   WhatsApp

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, BookOpen, Users, Trophy, TrendingUp, Clock, Target, Flame } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { dashboardAPI, activityAPI } from '../utils/api';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -11,8 +12,42 @@ const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [nextPact, setNextPact] = useState(null);
   const [examCountdown, setExamCountdown] = useState(null);
+  const [dashboardData, setDashboardData] = useState({
+    overview: {},
+    quickStats: {},
+    recentActivity: [],
+    upcomingPacts: []
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [overview, quickStats, recentActivity, upcomingPacts, streak] = await Promise.all([
+          dashboardAPI.getOverview().catch(() => ({})),
+          dashboardAPI.getQuickStats().catch(() => ({})),
+          dashboardAPI.getRecentActivity().catch(() => []),
+          dashboardAPI.getUpcomingPacts().catch(() => []),
+          activityAPI.getStreak().catch(() => ({ streak: 0 }))
+        ]);
+        
+        // Use streak from activity API if quickStats doesn't have it
+        if (!quickStats.currentStreak && streak.streak) {
+          quickStats.currentStreak = streak.streak;
+        }
+        
+        setDashboardData({ overview, quickStats, recentActivity, upcomingPacts });
+        
+        if (upcomingPacts.length > 0) {
+          setNextPact(upcomingPacts[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     // Check if coming from onboarding
     const urlParams = new URLSearchParams(location.search);
     if (urlParams.get('welcome') === 'true') {
@@ -22,11 +57,6 @@ const Dashboard = () => {
     // Load user data
     const onboardingData = JSON.parse(localStorage.getItem('onboardingData') || '{}');
     setUserData(onboardingData);
-
-    // Load next study pact
-    const studyPacts = JSON.parse(localStorage.getItem('studyPacts') || '[]');
-    const upcomingPact = studyPacts.find(pact => pact.status === 'scheduled');
-    setNextPact(upcomingPact);
 
     // Calculate exam countdown
     if (onboardingData.examDate) {
@@ -43,6 +73,8 @@ const Dashboard = () => {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       setExamCountdown(diffDays);
     }
+
+    fetchDashboardData();
   }, [location]);
 
   const getTimeUntilPact = (pactTime) => {
@@ -110,12 +142,14 @@ const Dashboard = () => {
           <h1 className={`text-2xl sm:text-3xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>
             Welcome back, {userData?.fullName?.split(' ')[0] || 'Student'}!
           </h1>
-          <div className="flex items-center space-x-1 text-orange-500">
-            <Flame className="w-6 h-6" />
-            <span className="font-bold text-lg">7</span>
-          </div>
+          {dashboardData.quickStats.currentStreak > 0 && (
+            <div className="flex items-center space-x-1 text-orange-500">
+              <Flame className="w-6 h-6" />
+              <span className="font-bold text-lg">{dashboardData.quickStats.currentStreak}</span>
+            </div>
+          )}
         </div>
-        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>7-day study streak 🔥 Keep it going!</p>
+        <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{dashboardData.quickStats.currentStreak ? `${dashboardData.quickStats.currentStreak}-day study streak 🔥 Keep it going!` : 'Start your study streak today!'}</p>
       </div>
 
       {/* Next Study Pact Alert */}
@@ -130,7 +164,7 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2 mt-2">
                 {nextPact.participants?.slice(0, 2).map((participant, index) => (
                   <span key={index} className={`px-2 py-1 rounded text-sm ${isDarkMode ? 'bg-white/20 text-gray-200' : 'bg-blue-200 text-blue-800'}`}>
-                    {participant.split('@')[0]}
+                    {typeof participant === 'string' ? participant.split('@')[0] : participant.fullName || participant.name || 'User'}
                   </span>
                 ))}
                 <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-blue-700'}`}>are ready</span>
@@ -185,7 +219,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Study Streak</p>
-              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>7 days</p>
+              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>{dashboardData.quickStats.currentStreak || 0} days</p>
             </div>
             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center hidden sm:flex">
               <Flame className="w-6 h-6 text-orange-600" />
@@ -196,8 +230,8 @@ const Dashboard = () => {
         <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Completed Quizzes</p>
-              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>24</p>
+              <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total Study Time</p>
+              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>{dashboardData.quickStats.totalStudyTime || 0}h</p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center hidden sm:flex">
               <BookOpen className="w-6 h-6 text-blue-600" />
@@ -209,7 +243,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Study Pacts</p>
-              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>15 completed</p>
+              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>{dashboardData.quickStats.pactsCompleted || 0} completed</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center hidden sm:flex">
               <Users className="w-6 h-6 text-green-600" />
@@ -220,8 +254,8 @@ const Dashboard = () => {
         <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Achievements</p>
-              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>12</p>
+              <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Average Score</p>
+              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>{dashboardData.quickStats.averageScore || 0}%</p>
             </div>
             <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center hidden sm:flex">
               <Trophy className="w-6 h-6 text-indigo-600" />
@@ -335,19 +369,10 @@ const Dashboard = () => {
           {/* Recent Achievements */}
           <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>🏆 Recent Achievements</h2>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <span className="text-green-600">•</span>
-                <span className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Completed 15 Study Pacts</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-blue-600">•</span>
-                <span className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>Unlocked "Consistent Learner" badge</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-indigo-600">•</span>
-                <span className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>40% improvement in {userData?.subjects?.[1] || 'Chemistry'}</span>
-              </div>
+            <div className="text-center py-4">
+              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                Start a study session to unlock your first achievement!
+              </p>
             </div>
           </div>
         </div>
@@ -357,36 +382,13 @@ const Dashboard = () => {
       <div className="mt-6">
         <div className={`${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'} rounded-xl shadow-lg p-6`}>
           <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Recent Activity</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <BookOpen className="w-4 h-4 text-green-600" />
-                </div>
-                <span className={`${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Completed Physics Quiz - Waves</span>
-              </div>
-              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>2 hours ago</span>
-            </div>
-            
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Users className="w-4 h-4 text-blue-600" />
-                </div>
-                <span className={`${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Joined Study Pact with Chidi and Ada</span>
-              </div>
-              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>5 hours ago</span>
-            </div>
-            
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                  <Trophy className="w-4 h-4 text-indigo-600" />
-                </div>
-                <span className={`${isDarkMode ? 'text-white' : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'}`}>Earned "Consistent Learner" badge</span>
-              </div>
-              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>1 day ago</span>
-            </div>
+          <div className="text-center py-8">
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mb-2`}>
+              No recent activity yet
+            </p>
+            <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+              Complete quizzes and study pacts to see your activity here
+            </p>
           </div>
         </div>
       </div>
