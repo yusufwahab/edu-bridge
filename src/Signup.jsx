@@ -31,7 +31,7 @@ export default function Signup({setUser}) {
 //     { value: "WAEC", label: "WAEC - Senior Secondary Certificate" },
 //     { value: "JAMB", label: "JAMB - University Entrance" },
 //     { value: "100Level", label: "100Level - University First Year" }
-//   ];
+//   
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -162,7 +162,9 @@ export default function Signup({setUser}) {
             type="text"
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className="w-full px-4 py-3 border rounded-lg text-center text-2xl font-bold tracking-widest focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className={`w-full px-4 py-3 border rounded-lg text-center text-2xl font-bold tracking-widest focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
+              isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
+            }`}
             placeholder="000000"
             maxLength="6"
           />
@@ -204,8 +206,12 @@ export default function Signup({setUser}) {
           <div className="w-16 h-16 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-xl flex items-center justify-center mb-4">
             <span className="text-white font-bold text-xl tracking-tighter">CSC</span>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-            Classence CBT
+          <h1 className={`text-3xl font-bold ${
+            isDarkMode 
+              ? 'text-white' 
+              : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+          }`}>
+            Classence
           </h1>
           <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Nigerian Educational Testing Platform</p>
         </div>
@@ -250,7 +256,7 @@ export default function Signup({setUser}) {
                 value={formData.firstName}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 ${
-                  errors.firstName ? "border-red-500 bg-red-50" : "border-gray-300"
+                  errors.firstName ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                 }`}
                 placeholder="Enter your first name"
               />
@@ -269,7 +275,7 @@ export default function Signup({setUser}) {
                 value={formData.lastName}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 ${
-                  errors.lastName ? "border-red-500 bg-red-50" : "border-gray-300"
+                  errors.lastName ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                 }`}
                 placeholder="Enter your last name"
               />
@@ -289,7 +295,7 @@ export default function Signup({setUser}) {
                 value={formData.email}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 ${
-                  errors.email ? "border-red-500 bg-red-50" : "border-gray-300"
+                  errors.email ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                 }`}
                 placeholder="Enter your email"
               />
@@ -310,7 +316,7 @@ export default function Signup({setUser}) {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 pr-12 ${
-                    errors.password ? "border-red-500 bg-red-50" : "border-gray-300"
+                    errors.password ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
@@ -339,7 +345,7 @@ export default function Signup({setUser}) {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 pr-12 ${
-                    errors.confirmPassword ? "border-red-500 bg-red-50" : "border-gray-300"
+                    errors.confirmPassword ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                   }`}
                   placeholder="Confirm your password"
                 />

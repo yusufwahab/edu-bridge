@@ -101,8 +101,12 @@ export default function Login({setUser}) {
           <div className="w-16 h-16 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 rounded-xl flex items-center justify-center mb-4">
             <span className="text-white font-bold text-xl tracking-tighter">CSC</span>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-            Classence CBT
+          <h1 className={`text-3xl font-bold ${
+            isDarkMode 
+              ? 'text-white' 
+              : 'bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent'
+          }`}>
+            Classence
           </h1>
           <p className={`mt-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Nigerian Educational Testing Platform</p>
         </div>
@@ -137,7 +141,7 @@ export default function Login({setUser}) {
                 value={formData.email}
                 onChange={handleInputChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 ${
-                  errors.email ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300"
+                  errors.email ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                 }`}
                 placeholder="Enter your email"
               />
@@ -158,7 +162,7 @@ export default function Login({setUser}) {
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 pr-12 ${
-                    errors.password ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300"
+                    errors.password ? "border-red-500 bg-red-50" : isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300"
                   }`}
                   placeholder="Enter your password"
                 />
