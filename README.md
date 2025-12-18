@@ -67,20 +67,23 @@ Our integrated attendance management system provides location-based attendance t
 
 ### Testing Credentials
 
-**Admin Registration Code**: `ADMIN_CODE=YAB3T5VLKX9`  
-*Use this code when creating an admin account (Teachers, Class Reps, Class Captains) for testing purposes.*
+**Admin Registration Code**: `YAB3T5VLKX9`  
+_Use this code when creating an admin account (Teachers, Class Reps, Class Captains) for testing purposes._
 
 ### Key Features
 
 - **Geolocation Verification**: Students can only mark attendance when physically present at designated class locations
 - **Real-time Session Management**: Sessions created by admins appear instantly on student dashboards
 - **Multi-role Support**: Teachers, class representatives, and class captains can manage attendance
+- **Comprehensive Attendance Dashboard**: Administrators have access to a detailed tabular view displaying all students who have marked attendance, including timestamps, location data, and session details
+- **PDF Export Functionality**: Complete attendance records can be exported as professionally formatted PDF documents for institutional record-keeping, reporting, and administrative purposes
 - **Multimedia Updates**: Post announcements with voice notes, text, or images
 - **Automated Workflows**: Seamless integration between admin actions and student interfaces
 
 ### For Administrators (Teachers, Class Reps, Class Captains)
 
 #### Setup Process:
+
 1. **Create Department/Class**: Set up organizational structure with relevant details
 2. **Add Subjects**: Create subject categories for attendance tracking
 3. **Schedule Sessions**: Create attendance sessions with specific time slots
@@ -89,6 +92,7 @@ Our integrated attendance management system provides location-based attendance t
 6. **Post Updates**: Share announcements and important information
 
 #### Admin Capabilities:
+
 - Create and manage multiple classes/departments
 - Set precise location boundaries using GPS coordinates
 - Schedule recurring or one-time attendance sessions
@@ -99,12 +103,14 @@ Our integrated attendance management system provides location-based attendance t
 ### For Students
 
 #### Registration Process:
+
 1. **Sign Up**: Register with full name and matriculation number
 2. **Select Department**: Choose class/department from dropdown menu
 3. **Profile Verification**: Complete profile setup and verification
 4. **Dashboard Access**: Access personalized student dashboard
 
 #### Student Features:
+
 - **One-Click Attendance**: Mark attendance with single button click
 - **Location Verification**: Automatic GPS verification before attendance marking
 - **Session Visibility**: View all available and upcoming sessions
@@ -115,12 +121,14 @@ Our integrated attendance management system provides location-based attendance t
 ### Technical Implementation
 
 #### Geolocation System:
+
 - **GPS Accuracy**: Uses device GPS for precise location detection
 - **Boundary Verification**: Checks if student is within designated class perimeter
 - **Fallback Options**: Network-based location for GPS-unavailable scenarios
 - **Privacy Protection**: Location data used only for attendance verification
 
 #### Real-time Synchronization:
+
 - **Instant Updates**: Admin actions reflect immediately on student interfaces
 - **Session Management**: Automatic session activation and deactivation
 - **Live Notifications**: Push notifications for new sessions and announcements
@@ -129,6 +137,7 @@ Our integrated attendance management system provides location-based attendance t
 ### Integration with Main Platform
 
 The attendance system is seamlessly integrated into the main Classence platform:
+
 - **Single Sign-On**: Use existing Classence credentials
 - **Unified Dashboard**: Access attendance features from main navigation
 - **Data Synchronization**: Student profiles sync across both systems
@@ -145,6 +154,7 @@ The attendance system is seamlessly integrated into the main Classence platform:
 ## Backend Integration
 
 ### Base URL
+
 **Production**: `https://edubridge-backend-thgw.onrender.com`  
 **Development**: `http://localhost:5000`
 
@@ -153,6 +163,7 @@ The attendance system is seamlessly integrated into the main Classence platform:
 #### Authentication Endpoints
 
 **Register User**
+
 ```http
 POST /api/auth/register
 Content-Type: application/json
@@ -165,9 +176,11 @@ Content-Type: application/json
   "agreeTerms": true
 }
 ```
-*Response: Automatically sends OTP to email*
+
+_Response: Automatically sends OTP to email_
 
 **Login User**
+
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -179,6 +192,7 @@ Content-Type: application/json
 ```
 
 **Get User Profile**
+
 ```http
 GET /api/user/me
 Authorization: Bearer <token>
@@ -187,6 +201,7 @@ Authorization: Bearer <token>
 #### Email Verification Endpoints
 
 **Send OTP**
+
 ```http
 POST /api/verification/send-otp
 Content-Type: application/json
@@ -197,6 +212,7 @@ Content-Type: application/json
 ```
 
 **Verify OTP**
+
 ```http
 POST /api/verification/verify-otp
 Content-Type: application/json
@@ -210,12 +226,14 @@ Content-Type: application/json
 #### Study Pacts Endpoints
 
 **Get All Pacts**
+
 ```http
 GET /api/pacts
 Authorization: Bearer <token>
 ```
 
 **Create Pact**
+
 ```http
 POST /api/pacts
 Authorization: Bearer <token>
@@ -232,6 +250,7 @@ Content-Type: application/json
 ```
 
 **Share Pact**
+
 ```http
 POST /api/pacts/{id}/share
 Authorization: Bearer <token>
@@ -245,6 +264,7 @@ Content-Type: application/json
 #### Notifications Endpoints
 
 **Update Notification Settings**
+
 ```http
 PUT /api/notifications/settings
 Authorization: Bearer <token>
@@ -259,6 +279,7 @@ Content-Type: application/json
 ```
 
 **Update Contact Information**
+
 ```http
 PUT /api/notifications/contact
 Authorization: Bearer <token>
@@ -273,6 +294,7 @@ Content-Type: application/json
 #### Settings Endpoints
 
 **Update Profile**
+
 ```http
 PUT /api/settings/profile
 Authorization: Bearer <token>
@@ -285,6 +307,7 @@ Content-Type: application/json
 ```
 
 **Update Class Information**
+
 ```http
 PUT /api/settings/class
 Authorization: Bearer <token>
@@ -300,6 +323,7 @@ Content-Type: application/json
 ### Frontend Integration
 
 The frontend uses a centralized API utility (`src/utils/api.js`) that handles:
+
 - **Authentication headers** with JWT tokens
 - **Error handling** and response parsing
 - **Base URL configuration** via environment variables
